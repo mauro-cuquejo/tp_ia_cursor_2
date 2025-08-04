@@ -6,8 +6,8 @@
   --secondary-color: #764ba2;
 
   /* Colores de estado */
-  --success-color: #10b981;
-  --error-color: #e74c3c;
+  --success-color: #15553f;
+  --error-color: #7c2b2b;
   --warning-color: #f59e0b;
 
   /* Colores de texto */
@@ -20,12 +20,137 @@
   --bg-secondary: #f8f9fa;
   --bg-error: #fdf2f2;
   --bg-success: #f0f9ff;
+  --bg-warning: #fef3c7;
 
   /* Colores de borde */
   --border-primary: #e1e5e9;
   --border-focus: #667eea;
   --border-error: #e74c3c;
   --border-success: #10b981;
+  --border-warning: #f59e0b;
+
+  /* Variables específicas para form-input */
+  --form-input-bg: #ffffff;
+  --form-input-text: #333;
+  --form-input-border: #e1e5e9;
+  --form-input-placeholder: #999;
+  --form-input-focus-bg: #ffffff;
+  --form-input-focus-border: #667eea;
+  --form-input-focus-shadow: rgba(102, 126, 234, 0.1);
+
+  /* Variables para estados de error */
+  --form-input-error-bg: #fdf2f2;
+  --form-input-error-text: #333;
+  --form-input-error-border: #e74c3c;
+  --form-input-error-shadow: rgba(231, 76, 60, 0.1);
+
+  /* Variables para estados de éxito */
+  --form-input-success-bg: #f0f9ff;
+  --form-input-success-text: #333;
+  --form-input-success-border: #10b981;
+  --form-input-success-shadow: rgba(16, 185, 129, 0.1);
+
+  /* Variables para estados de advertencia */
+  --form-input-warning-bg: #fef3c7;
+  --form-input-warning-text: #92400e;
+  --form-input-warning-border: #f59e0b;
+  --form-input-warning-shadow: rgba(245, 158, 11, 0.1);
+
+  /* Variables específicas para form-header */
+  --form-header-bg: transparent;
+  --form-header-text-primary: #333;
+  --form-header-text-secondary: #666;
+  --form-header-border: none;
+  --form-header-shadow: none;
+  --form-header-spacing-bottom: 2rem;
+
+  /* Variables específicas para btn-primary */
+  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-text: #ffffff;
+  --btn-primary-border: none;
+  --btn-primary-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --btn-primary-shadow-hover: 0 4px 12px rgba(102, 126, 234, 0.4);
+  --btn-primary-shadow-active: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --btn-primary-transform-hover: translateY(-2px);
+  --btn-primary-transform-active: translateY(0);
+  --btn-primary-bg-active: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  --btn-primary-text-active: #ffffff;
+  --btn-primary-border-active: none;
+  --btn-primary-shadow-active: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --btn-primary-opacity-disabled: 0.7;
+  --btn-primary-bg-disabled: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%);
+
+  /* Variables específicas para btn (botón base) */
+  --btn-bg: transparent;
+  --btn-text: var(--text-primary);
+  --btn-border: none;
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-transform-hover: none;
+  --btn-transform-active: none;
+  --btn-opacity-disabled: 0.7;
+  --btn-bg-disabled: transparent;
+  --btn-padding: var(--spacing-md);
+  --btn-border-radius: var(--border-radius-md);
+  --btn-font-size: var(--font-size-base);
+  --btn-font-weight: var(--font-weight-semibold);
+  --btn-transition: all var(--transition-normal);
+  --btn-cursor: pointer;
+  --btn-cursor-disabled: not-allowed;
+
+  /* Variables específicas para btn-secondary */
+  --btn-secondary-bg: transparent;
+  --btn-secondary-text: var(--text-light);
+  --btn-secondary-border: 2px solid var(--border-primary);
+  --btn-secondary-shadow: none;
+  --btn-secondary-shadow-hover: none;
+  --btn-secondary-shadow-active: none;
+  --btn-secondary-transform-hover: translateY(-2px);
+  --btn-secondary-transform-active: translateY(0);
+  --btn-secondary-opacity-disabled: 0.5;
+  --btn-secondary-bg-disabled: transparent;
+  --btn-secondary-bg-hover: #f0f2f5;
+  --btn-secondary-border-hover: var(--border-focus);
+  --btn-secondary-text-hover: var(--text-secondary);
+  --btn-secondary-bg-focus: var(--bg-secondary);
+  --btn-secondary-border-focus: var(--border-focus);
+  --btn-secondary-text-focus: var(--text-secondary);
+  --btn-secondary-shadow-focus: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  --btn-secondary-bg-active: var(--bg-secondary);
+  --btn-secondary-border-active: var(--border-focus);
+  --btn-secondary-text-active: var(--text-secondary);
+  --btn-secondary-shadow-active: 0 1px 2px rgba(102, 126, 234, 0.1);
+
+  /* Variables específicas para form-footer */
+  --form-footer-bg: transparent;
+  --form-footer-text: var(--text-secondary);
+  --form-footer-border: 1px solid var(--border-primary);
+  --form-footer-shadow: none;
+  --form-footer-spacing-top: 2rem;
+  --form-footer-spacing-bottom: 0;
+  --form-footer-padding-top: 2rem;
+  --form-footer-text-size: var(--font-size-sm);
+  --form-footer-text-weight: var(--font-weight-normal);
+  --form-footer-link-color: var(--primary-color);
+  --form-footer-link-hover-color: var(--secondary-color);
+  --form-footer-link-weight: var(--font-weight-medium);
+  --form-footer-link-transition: color var(--transition-fast);
+
+  /* Variables para mensajes de error */
+  --error-message-bg: rgba(231, 76, 60, 0.05);
+  --error-message-text: #e74c3c;
+  --error-message-border: #e74c3c;
+
+  /* Variables para mensajes de éxito */
+  --success-message-bg: rgba(16, 185, 129, 0.05);
+  --success-message-text: #10b981;
+  --success-message-border: #10b981;
+
+  /* Variables para mensajes de advertencia */
+  --warning-message-bg: rgba(245, 158, 11, 0.05);
+  --warning-message-text: #92400e;
+  --warning-message-border: #f59e0b;
 
   /* Espaciado */
   --spacing-xs: 0.25rem;
@@ -120,6 +245,12 @@ body {
   }
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
 /* Clases de utilidad */
 .fade-in {
   animation: fadeIn var(--transition-normal);
@@ -143,4 +274,249 @@ body {
 
 .text-secondary {
   color: var(--text-secondary);
+}
+
+/* Estilos base para form-header usando las variables */
+.form-header {
+  background-color: var(--form-header-bg);
+  color: var(--form-header-text-primary);
+  border: var(--form-header-border);
+  box-shadow: var(--form-header-shadow);
+  margin-bottom: var(--form-header-spacing-bottom);
+  text-align: center;
+}
+
+.form-header h1 {
+  color: var(--form-header-text-primary);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.form-header p {
+  color: var(--form-header-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Estilos base para form-input usando las variables */
+.form-input {
+  background-color: var(--form-input-bg);
+  color: var(--form-input-text);
+  border: 2px solid var(--form-input-border);
+}
+
+.form-input::placeholder {
+  color: var(--form-input-placeholder);
+}
+
+.form-input:focus {
+  background-color: var(--form-input-focus-bg);
+  border-color: var(--form-input-focus-border);
+  box-shadow: 0 0 0 3px var(--form-input-focus-shadow);
+}
+
+/* Estados de error */
+.form-input.error,
+.form-group.has-error .form-input {
+  background-color: var(--form-input-error-bg);
+  color: var(--form-input-error-text);
+  border-color: var(--form-input-error-border);
+  box-shadow: 0 0 0 3px var(--form-input-error-shadow);
+}
+
+/* Estados de éxito */
+.form-input.success,
+.form-group.has-success .form-input {
+  background-color: var(--form-input-success-bg);
+  color: var(--form-input-success-text);
+  border-color: var(--form-input-success-border);
+  box-shadow: 0 0 0 3px var(--form-input-success-shadow);
+}
+
+/* Estados de advertencia */
+.form-input.warning,
+.form-group.has-warning .form-input {
+  background-color: var(--form-input-warning-bg);
+  color: var(--form-input-warning-text);
+  border-color: var(--form-input-warning-border);
+  box-shadow: 0 0 0 3px var(--form-input-warning-shadow);
+}
+
+/* Estilos base para btn (botón base) usando las variables */
+.btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: var(--btn-border);
+  box-shadow: var(--btn-shadow);
+  padding: var(--btn-padding);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  cursor: var(--btn-cursor);
+  transition: var(--btn-transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover:not(:disabled) {
+  transform: var(--btn-transform-hover);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+.btn:active:not(:disabled) {
+  transform: var(--btn-transform-active);
+  box-shadow: var(--btn-shadow-active);
+}
+
+.btn:disabled {
+  opacity: var(--btn-opacity-disabled);
+  background: var(--btn-bg-disabled);
+  cursor: var(--btn-cursor-disabled);
+}
+
+/* Estilos base para btn-primary usando las variables */
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: var(--btn-primary-border);
+  box-shadow: var(--btn-primary-shadow);
+  padding: var(--btn-padding);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  cursor: var(--btn-cursor);
+  transition: var(--btn-transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: var(--btn-primary-transform-hover);
+  box-shadow: var(--btn-primary-shadow-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  background: var(--btn-primary-bg-active);
+  color: var(--btn-primary-text-active);
+  border: var(--btn-primary-border-active);
+  transform: var(--btn-primary-transform-active);
+  box-shadow: var(--btn-primary-shadow-active);
+}
+
+.btn-primary:disabled {
+  opacity: var(--btn-primary-opacity-disabled);
+  background: var(--btn-primary-bg-disabled);
+  cursor: not-allowed;
+}
+
+/* Estilos base para btn-secondary usando las variables */
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: var(--btn-secondary-border);
+  box-shadow: var(--btn-secondary-shadow);
+  padding: var(--btn-padding);
+  border-radius: var(--btn-border-radius);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  cursor: var(--btn-cursor);
+  transition: var(--btn-transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--btn-secondary-bg-hover);
+  border-color: var(--btn-secondary-border-hover);
+  color: var(--btn-secondary-text-hover);
+  transform: var(--btn-secondary-transform-hover);
+  box-shadow: var(--btn-secondary-shadow-hover);
+}
+
+.btn-secondary:focus:not(:disabled) {
+  background: var(--btn-secondary-bg-focus);
+  border-color: var(--btn-secondary-border-focus);
+  color: var(--btn-secondary-text-focus);
+  box-shadow: var(--btn-secondary-shadow-focus);
+  outline: none;
+}
+
+.btn-secondary:active:not(:disabled) {
+  background: var(--btn-secondary-bg-active);
+  border-color: var(--btn-secondary-border-active);
+  color: var(--btn-secondary-text-active);
+  transform: var(--btn-secondary-transform-active);
+  box-shadow: var(--btn-secondary-shadow-active);
+}
+
+.btn-secondary:disabled {
+  opacity: var(--btn-secondary-opacity-disabled);
+  background: var(--btn-secondary-bg-disabled);
+  cursor: var(--btn-cursor-disabled);
+}
+
+/* Estilos base para form-footer usando las variables */
+.form-footer {
+  background: var(--form-footer-bg);
+  color: var(--form-footer-text);
+  border-top: var(--form-footer-border);
+  box-shadow: var(--form-footer-shadow);
+  margin-top: var(--form-footer-spacing-top);
+  margin-bottom: var(--form-footer-spacing-bottom);
+  padding-top: var(--form-footer-padding-top);
+  text-align: center;
+}
+
+.form-footer p {
+  color: var(--form-header-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.form-footer a {
+  color: var(--form-footer-link-color);
+  font-weight: var(--form-footer-link-weight);
+  text-decoration: none;
+  transition: var(--form-footer-link-transition);
+}
+
+.form-footer a:hover {
+  color: var(--form-footer-link-hover-color);
+  text-decoration: underline;
+}
+
+/* Mensajes de error */
+.error-message {
+  background-color: var(--error-message-bg);
+  color: var(--error-message-text);
+  border-left: 3px solid var(--error-message-border);
+}
+
+/* Mensajes de éxito */
+.success-message {
+  background-color: var(--success-message-bg);
+  color: var(--success-message-text);
+  border-left: 3px solid var(--success-message-border);
+}
+
+/* Mensajes de advertencia */
+.warning-message {
+  background-color: var(--warning-message-bg);
+  color: var(--warning-message-text);
+  border-left: 3px solid var(--warning-message-border);
 }

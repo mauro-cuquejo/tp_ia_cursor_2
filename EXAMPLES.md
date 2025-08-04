@@ -1,930 +1,1197 @@
-# 📝 Ejemplos de Implementación
+# 📝 Ejemplos de Código - Plantilla de Proyecto
 
-Este archivo contiene ejemplos prácticos de los componentes y archivos más importantes del proyecto.
+Este documento proporciona ejemplos concretos de código para implementar la estructura base definida en `PROJECT_TEMPLATE.md`.
 
-## 🎨 Frontend - Componentes Vue
+## 🎨 Frontend - Ejemplos de Implementación
 
-### LoginForm.vue
+### **1. Configuración de Vite (Vue.js)**
 
-```vue
-<template>
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="form-header">
-        <h1>Iniciar Sesión</h1>
-        <p>Ingresa tus credenciales para continuar</p>
-      </div>
-
-      <form @submit.prevent="handleSubmit" class="form">
-        <!-- Mensaje de error del servidor -->
-        <div v-if="serverError" id="errorMessage" :class="['server-message', { 'success': isSuccessMessage, 'error': !isSuccessMessage }]">
-          {{ serverError }}
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="formData.email"
-            @blur="validateEmail"
-            @input="clearEmailError"
-            :class="['form-input', { 'error': errors.email }]"
-            placeholder="tu@email.com"
-            required
-          />
-          <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            v-model="formData.password"
-            @blur="validatePassword"
-            @input="clearPasswordError"
-            :class="['form-input', { 'error': errors.password }]"
-            placeholder="Tu contraseña"
-            required
-          />
-          <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
-        </div>
-
-        <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-          <span v-if="isSubmitting">Iniciando sesión...</span>
-          <span v-else>Iniciar Sesión</span>
-        </button>
-      </form>
-
-      <div class="form-footer">
-        <p>¿No tienes una cuenta? <a href="#" @click.prevent="goToRegister">Regístrate aquí</a></p>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-import { apiRequest, API_CONFIG } from '../config/api.js'
-
-export default {
-  name: 'LoginForm',
-  data() {
-    return {
-      formData: {
-        email: '',
-        password: ''
-      },
-      errors: {
-        email: '',
-        password: ''
-      },
-      isSubmitting: false,
-      serverError: '',
-      isSuccessMessage: false
-    }
-  },
-  methods: {
-    validateEmail() {
-      const email = this.formData.email.trim()
-
-      if (!email) {
-        this.errors.email = 'El email es requerido'
-        return false
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-        this.errors.email = 'Ingresa un email válido'
-        return false
-      }
-
-      this.errors.email = ''
-      return true
-    },
-
-    validatePassword() {
-      const password = this.formData.password.trim()
-
-      if (!password) {
-        this.errors.password = 'La contraseña es requerida'
-        return false
-      }
-
-      if (password.length < 6) {
-        this.errors.password = 'La contraseña debe tener al menos 6 caracteres'
-        return false
-      }
-
-      this.errors.password = ''
-      return true
-    },
-
-    clearEmailError() {
-      this.errors.email = ''
-      this.serverError = ''
-    },
-
-    clearPasswordError() {
-      this.errors.password = ''
-      this.serverError = ''
-    },
-
-    async handleSubmit() {
-      if (!this.validateEmail() || !this.validatePassword()) {
-        return
-      }
-
-      this.isSubmitting = true
-      this.serverError = ''
-
-      try {
-        const { response, data } = await apiRequest(API_CONFIG.ENDPOINTS.LOGIN, {
-          method: 'POST',
-          body: JSON.stringify({
-            email: this.formData.email,
-            password: this.formData.password
-          })
-        })
-
-        if (response.ok) {
-          this.serverError = `¡Inicio de sesión exitoso! Bienvenido ${data.user.email}`
-          this.isSuccessMessage = true
-          this.formData = { email: '', password: '' }
-        } else {
-          this.serverError = data.message || 'Error al iniciar sesión'
-          this.isSuccessMessage = false
-        }
-      } catch (error) {
-        this.serverError = 'Error de conexión. Verifica que el servidor esté ejecutándose.'
-        this.isSuccessMessage = false
-      } finally {
-        this.isSubmitting = false
-      }
-    },
-
-    goToRegister() {
-      this.$emit('go-to-register')
-    }
-  }
-}
-</script>
-```
-
-### RegisterForm.vue
-
-```vue
-<template>
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="form-header">
-        <h1>Crear Cuenta</h1>
-        <p>Completa los datos para registrarte</p>
-      </div>
-
-      <form @submit.prevent="handleSubmit" class="form">
-        <!-- Mensaje de error del servidor -->
-        <div v-if="serverError" id="errorMessage" :class="['server-message', { 'success': isSuccessMessage, 'error': !isSuccessMessage }]">
-          {{ serverError }}
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="formData.email"
-            @blur="validateEmail"
-            @input="clearEmailError"
-            :class="['form-input', { 'error': errors.email }]"
-            placeholder="tu@email.com"
-            required
-          />
-          <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            v-model="formData.password"
-            @blur="validatePassword"
-            @input="clearPasswordError"
-            :class="['form-input', { 'error': errors.password }]"
-            placeholder="Tu contraseña"
-            required
-          />
-          <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="confirmPassword">Confirmar Contraseña</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            v-model="formData.confirmPassword"
-            @blur="validateConfirmPassword"
-            @input="clearConfirmPasswordError"
-            :class="['form-input', { 'error': errors.confirmPassword }]"
-            placeholder="Confirma tu contraseña"
-            required
-          />
-          <span v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</span>
-        </div>
-
-        <div class="button-group">
-          <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-            <span v-if="isSubmitting">Creando cuenta...</span>
-            <span v-else>Crear Cuenta</span>
-          </button>
-          <button type="button" class="btn btn-secondary" @click="goToLogin" :disabled="isSubmitting">
-            Cancelar
-          </button>
-        </div>
-      </form>
-
-      <div class="form-footer">
-        <p>¿Ya tienes una cuenta? <a href="#" @click.prevent="goToLogin">Inicia sesión aquí</a></p>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-import { apiRequest, API_CONFIG } from '../config/api.js'
-
-export default {
-  name: 'RegisterForm',
-  data() {
-    return {
-      formData: {
-        email: '',
-        password: '',
-        confirmPassword: ''
-      },
-      errors: {
-        email: '',
-        password: '',
-        confirmPassword: ''
-      },
-      isSubmitting: false,
-      serverError: '',
-      isSuccessMessage: false
-    }
-  },
-  methods: {
-    validateEmail() {
-      const email = this.formData.email.trim()
-
-      if (!email) {
-        this.errors.email = 'El email es requerido'
-        return false
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-        this.errors.email = 'Ingresa un email válido'
-        return false
-      }
-
-      this.errors.email = ''
-      return true
-    },
-
-    validatePassword() {
-      const password = this.formData.password.trim()
-
-      if (!password) {
-        this.errors.password = 'La contraseña es requerida'
-        return false
-      }
-
-      if (password.length < 6) {
-        this.errors.password = 'La contraseña debe tener al menos 6 caracteres'
-        return false
-      }
-
-      this.errors.password = ''
-      return true
-    },
-
-    validateConfirmPassword() {
-      const confirmPassword = this.formData.confirmPassword.trim()
-
-      if (!confirmPassword) {
-        this.errors.confirmPassword = 'Confirma tu contraseña'
-        return false
-      }
-
-      if (confirmPassword !== this.formData.password) {
-        this.errors.confirmPassword = 'Las contraseñas no coinciden'
-        return false
-      }
-
-      this.errors.confirmPassword = ''
-      return true
-    },
-
-    clearEmailError() {
-      this.errors.email = ''
-      this.serverError = ''
-    },
-
-    clearPasswordError() {
-      this.errors.password = ''
-      this.serverError = ''
-      // Revalidar confirmación si hay datos
-      if (this.formData.confirmPassword) {
-        this.validateConfirmPassword()
-      }
-    },
-
-    clearConfirmPasswordError() {
-      this.errors.confirmPassword = ''
-      this.serverError = ''
-    },
-
-    async handleSubmit() {
-      if (!this.validateEmail() || !this.validatePassword() || !this.validateConfirmPassword()) {
-        return
-      }
-
-      this.isSubmitting = true
-      this.serverError = ''
-
-      try {
-        const { response, data } = await apiRequest(API_CONFIG.ENDPOINTS.REGISTER, {
-          method: 'POST',
-          body: JSON.stringify({
-            email: this.formData.email,
-            password: this.formData.password
-          })
-        })
-
-        if (response.ok) {
-          this.serverError = '¡Cuenta creada exitosamente! Redirigiendo al login...'
-          this.isSuccessMessage = true
-          this.formData = { email: '', password: '', confirmPassword: '' }
-
-          // Redirigir al login después de 1 segundo
-          setTimeout(() => {
-            this.goToLogin()
-          }, 1000)
-        } else {
-          this.serverError = data.message || 'Error al crear la cuenta'
-          this.isSuccessMessage = false
-        }
-      } catch (error) {
-        this.serverError = 'Error de conexión. Verifica que el servidor esté ejecutándose.'
-        this.isSuccessMessage = false
-      } finally {
-        this.isSubmitting = false
-      }
-    },
-
-    goToLogin() {
-      this.$emit('go-to-login')
-    }
-  }
-}
-</script>
-```
-
-## 🔧 Backend - Rutas y Configuración
-
-### database.js
-
+**`frontend/vite.config.js`**
 ```javascript
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-// Configuración de la base de datos
-const dbPath = process.env.DB_PATH || path.join(__dirname, 'database.sqlite');
-
-// Crear conexión a la base de datos
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('❌ Error conectando a la base de datos:', err.message);
-    } else {
-        console.log('✅ Conectado a la base de datos SQLite');
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    port: 3000,
+    open: true
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true
+  },
+  resolve: {
+    alias: {
+      '@': '/src'
     }
+  }
+})
+```
+
+### **2. Configuración de Estilos Base**
+
+**`frontend/src/assets/styles/base.css`**
+```css
+/* Variables CSS para colores y configuración */
+:root {
+  /* Colores principales */
+  --primary-color: #667eea;
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-color: #764ba2;
+
+  /* Colores de estado */
+  --success-color: #10b981;
+  --error-color: #e74c3c;
+  --warning-color: #f59e0b;
+
+  /* Colores de texto */
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-light: #999;
+
+  /* Espaciado */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+
+  /* Transiciones */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* Animaciones base */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+```
+
+### **3. Configuración de API**
+
+**`frontend/src/config/api.js`**
+```javascript
+export const API_CONFIG = {
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+  ENDPOINTS: {
+    // Definir endpoints específicos del proyecto
+    AUTH: {
+      LOGIN: '/api/auth/login',
+      REGISTER: '/api/auth/register',
+      LOGOUT: '/api/auth/logout'
+    },
+    USERS: {
+      PROFILE: '/api/users/profile',
+      UPDATE: '/api/users/update'
+    }
+  },
+  HEADERS: {
+    'Content-Type': 'application/json'
+  }
+};
+
+export const apiRequest = async (endpoint, options = {}) => {
+  const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+  const config = {
+    headers: { ...API_CONFIG.HEADERS, ...options.headers },
+    ...options
+  };
+
+  try {
+    const response = await fetch(url, config);
+    const data = await response.json();
+    return { response, data };
+  } catch (error) {
+    throw new Error(`Error en petición API: ${error.message}`);
+  }
+};
+
+// Helper para requests con autenticación
+export const authenticatedRequest = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('authToken');
+  const headers = {
+    ...options.headers,
+    'Authorization': token ? `Bearer ${token}` : ''
+  };
+
+  return apiRequest(endpoint, { ...options, headers });
+};
+```
+
+### **4. Componente Base Vue**
+
+**`frontend/src/components/BaseForm.vue`**
+```vue
+<template>
+  <form @submit.prevent="handleSubmit" class="form">
+    <div class="form-header">
+      <h1>{{ title }}</h1>
+      <p>{{ subtitle }}</p>
+    </div>
+
+    <!-- Mensaje del servidor -->
+    <div v-if="serverMessage"
+         :class="['server-message', { 'success': isSuccess, 'error': !isSuccess }]">
+      {{ serverMessage }}
+    </div>
+
+    <!-- Campos del formulario -->
+    <slot name="fields"></slot>
+
+    <!-- Botones -->
+    <div class="button-group">
+      <button type="submit"
+              class="btn btn-primary"
+              :disabled="isSubmitting">
+        <span v-if="isSubmitting">{{ loadingText }}</span>
+        <span v-else>{{ submitText }}</span>
+      </button>
+
+      <slot name="secondary-button"></slot>
+    </div>
+
+    <!-- Footer -->
+    <div class="form-footer">
+      <slot name="footer"></slot>
+    </div>
+  </form>
+</template>
+
+<script>
+export default {
+  name: 'BaseForm',
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    subtitle: {
+      type: String,
+      default: ''
+    },
+    submitText: {
+      type: String,
+      default: 'Enviar'
+    },
+    loadingText: {
+      type: String,
+      default: 'Enviando...'
+    },
+    isSubmitting: {
+      type: Boolean,
+      default: false
+    },
+    serverMessage: {
+      type: String,
+      default: ''
+    },
+    isSuccess: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['submit'],
+  methods: {
+    handleSubmit() {
+      this.$emit('submit');
+    }
+  }
+}
+</script>
+```
+
+### **5. Store de Estado (Pinia)**
+
+**`frontend/src/stores/auth.js`**
+```javascript
+import { defineStore } from 'pinia';
+import { apiRequest, API_CONFIG } from '@/config/api.js';
+
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    user: null,
+    token: localStorage.getItem('authToken') || null,
+    isAuthenticated: false,
+    loading: false,
+    error: null
+  }),
+
+  getters: {
+    getUser: (state) => state.user,
+    getToken: (state) => state.token,
+    isLoggedIn: (state) => state.isAuthenticated,
+    isLoading: (state) => state.loading,
+    getError: (state) => state.error
+  },
+
+  actions: {
+    async login(credentials) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { response, data } = await apiRequest(API_CONFIG.ENDPOINTS.AUTH.LOGIN, {
+          method: 'POST',
+          body: JSON.stringify(credentials)
+        });
+
+        if (response.ok) {
+          this.user = data.user;
+          this.token = data.token;
+          this.isAuthenticated = true;
+          localStorage.setItem('authToken', data.token);
+          return { success: true, data };
+        } else {
+          this.error = data.message;
+          return { success: false, error: data.message };
+        }
+      } catch (error) {
+        this.error = 'Error de conexión';
+        return { success: false, error: 'Error de conexión' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async register(userData) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { response, data } = await apiRequest(API_CONFIG.ENDPOINTS.AUTH.REGISTER, {
+          method: 'POST',
+          body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+          return { success: true, data };
+        } else {
+          this.error = data.message;
+          return { success: false, error: data.message };
+        }
+      } catch (error) {
+        this.error = 'Error de conexión';
+        return { success: false, error: 'Error de conexión' };
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    logout() {
+      this.user = null;
+      this.token = null;
+      this.isAuthenticated = false;
+      this.error = null;
+      localStorage.removeItem('authToken');
+    },
+
+    clearError() {
+      this.error = null;
+    }
+  }
+});
+```
+
+---
+
+## ⚙️ Backend - Ejemplos de Implementación
+
+### **1. Configuración de Express**
+
+**`backend/src/app.js`**
+```javascript
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import routes from './routes/index.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+
+const app = express();
+
+// Middleware de seguridad
+app.use(helmet());
+
+// Middleware de CORS
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
+
+// Middleware de logging
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('combined'));
+}
+
+// Middleware de parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Logging de requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
 });
 
-// Habilitar foreign keys
-db.run('PRAGMA foreign_keys = ON');
+// Rutas
+app.use('/', routes);
 
-// Función para ejecutar consultas con promesas
-const runQuery = (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-        db.run(sql, params, function (err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve({ id: this.lastID, changes: this.changes });
-            }
-        });
+// Health check
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Middleware de manejo de errores
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+export default app;
+```
+
+### **2. Configuración de Base de Datos**
+
+**`backend/src/config/database.js`**
+```javascript
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+import path from 'path';
+
+class Database {
+  constructor() {
+    this.db = null;
+    this.dbPath = process.env.DB_PATH || './database/app.sqlite';
+  }
+
+  async connect() {
+    try {
+      this.db = await open({
+        filename: this.dbPath,
+        driver: sqlite3.Database
+      });
+
+      console.log('✅ Base de datos conectada');
+      return this.db;
+    } catch (error) {
+      console.error('❌ Error conectando a la base de datos:', error);
+      throw error;
+    }
+  }
+
+  async query(sql, params = []) {
+    try {
+      return await this.db.run(sql, params);
+    } catch (error) {
+      console.error('❌ Error en query:', error);
+      throw error;
+    }
+  }
+
+  async getQuery(sql, params = []) {
+    try {
+      return await this.db.get(sql, params);
+    } catch (error) {
+      console.error('❌ Error en getQuery:', error);
+      throw error;
+    }
+  }
+
+  async allQuery(sql, params = []) {
+    try {
+      return await this.db.all(sql, params);
+    } catch (error) {
+      console.error('❌ Error en allQuery:', error);
+      throw error;
+    }
+  }
+
+  async close() {
+    if (this.db) {
+      await this.db.close();
+      console.log('🔒 Base de datos cerrada');
+    }
+  }
+}
+
+export default new Database();
+```
+
+### **3. Middleware de Autenticación**
+
+**`backend/src/middleware/auth.js`**
+```javascript
+import jwt from 'jsonwebtoken';
+import { SECURITY_CONFIG } from '../config/security.js';
+
+export const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({
+      message: 'Token de acceso requerido'
     });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECURITY_CONFIG.jwt.secret);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(403).json({
+      message: 'Token inválido o expirado'
+    });
+  }
 };
 
-// Función para obtener un registro
-const getQuery = (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-        db.get(sql, params, (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(row);
-            }
-        });
-    });
-};
+export const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
-// Función para obtener múltiples registros
-const allQuery = (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-        db.all(sql, params, (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
-    });
-};
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, SECURITY_CONFIG.jwt.secret);
+      req.user = decoded;
+    } catch (error) {
+      // Token inválido, pero continuamos sin autenticación
+    }
+  }
 
-module.exports = {
-    db,
-    runQuery,
-    getQuery,
-    allQuery
+  next();
 };
 ```
 
-### routes/auth.js
+### **4. Controlador de Usuarios**
 
+**`backend/src/controllers/userController.js`**
 ```javascript
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const { runQuery, getQuery } = require('../database');
-const securityConfig = require('../config/security');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import database from '../config/database.js';
+import { SECURITY_CONFIG } from '../config/security.js';
+
+export const userController = {
+  async register(req, res) {
+    try {
+      const { email, password, name } = req.body;
+
+      // Verificar si el usuario ya existe
+      const existingUser = await database.getQuery(
+        'SELECT id FROM users WHERE email = ?',
+        [email]
+      );
+
+      if (existingUser) {
+        return res.status(409).json({
+          message: 'El usuario ya existe'
+        });
+      }
+
+      // Hash de la contraseña
+      const hashedPassword = await bcrypt.hash(
+        password,
+        SECURITY_CONFIG.bcrypt.saltRounds
+      );
+
+      // Crear usuario
+      const result = await database.query(
+        'INSERT INTO users (email, password, name, created_at) VALUES (?, ?, ?, ?)',
+        [email, hashedPassword, name, new Date().toISOString()]
+      );
+
+      console.log('✅ Usuario registrado:', { email, userId: result.lastID });
+
+      res.status(201).json({
+        message: 'Usuario creado exitosamente',
+        userId: result.lastID
+      });
+    } catch (error) {
+      console.error('❌ Error en registro:', error);
+      res.status(500).json({
+        message: 'Error interno del servidor'
+      });
+    }
+  },
+
+  async login(req, res) {
+    try {
+      const { email, password } = req.body;
+
+      // Buscar usuario
+      const user = await database.getQuery(
+        'SELECT id, email, password, name FROM users WHERE email = ?',
+        [email]
+      );
+
+      if (!user) {
+        return res.status(401).json({
+          message: 'Credenciales inválidas'
+        });
+      }
+
+      // Verificar contraseña
+      const isValidPassword = await bcrypt.compare(password, user.password);
+
+      if (!isValidPassword) {
+        return res.status(401).json({
+          message: 'Credenciales inválidas'
+        });
+      }
+
+      // Generar token JWT
+      const token = jwt.sign(
+        {
+          userId: user.id,
+          email: user.email
+        },
+        SECURITY_CONFIG.jwt.secret,
+        { expiresIn: SECURITY_CONFIG.jwt.expiresIn }
+      );
+
+      console.log('✅ Login exitoso:', { email: user.email });
+
+      res.json({
+        message: 'Login exitoso',
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name
+        },
+        token
+      });
+    } catch (error) {
+      console.error('❌ Error en login:', error);
+      res.status(500).json({
+        message: 'Error interno del servidor'
+      });
+    }
+  },
+
+  async getProfile(req, res) {
+    try {
+      const userId = req.user.userId;
+
+      const user = await database.getQuery(
+        'SELECT id, email, name, created_at FROM users WHERE id = ?',
+        [userId]
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          message: 'Usuario no encontrado'
+        });
+      }
+
+      res.json({
+        user
+      });
+    } catch (error) {
+      console.error('❌ Error obteniendo perfil:', error);
+      res.status(500).json({
+        message: 'Error interno del servidor'
+      });
+    }
+  }
+};
+```
+
+### **5. Rutas de API**
+
+**`backend/src/routes/auth.js`**
+```javascript
+import express from 'express';
+import { userController } from '../controllers/userController.js';
+import { validateUserData } from '../middleware/validation.js';
 
 const router = express.Router();
 
-// Middleware para validar datos de entrada
-const validateUserData = (req, res, next) => {
-    const { email, password } = req.body;
+// POST /api/auth/register
+router.post('/register', validateUserData, userController.register);
 
-    console.log('📥 Datos recibidos:', { email, password: password ? '[HIDDEN]' : 'undefined' });
+// POST /api/auth/login
+router.post('/login', validateUserData, userController.login);
 
-    if (!email || !password) {
-        return res.status(400).json({
-            error: 'Datos incompletos',
-            message: 'Email y password son requeridos'
-        });
-    }
-
-    // Validar formato de email
-    if (!securityConfig.email.pattern.test(email)) {
-        return res.status(400).json({
-            error: 'Email inválido',
-            message: 'Ingresa un email válido'
-        });
-    }
-
-    // Validar longitud de email
-    if (email.length > securityConfig.email.maxLength) {
-        return res.status(400).json({
-            error: 'Email muy largo',
-            message: 'El email es demasiado largo'
-        });
-    }
-
-    // Validar longitud de password
-    if (password.length < securityConfig.bcrypt.minPasswordLength) {
-        return res.status(400).json({
-            error: 'Password muy corto',
-            message: `La contraseña debe tener al menos ${securityConfig.bcrypt.minPasswordLength} caracteres`
-        });
-    }
-
-    if (password.length > securityConfig.bcrypt.maxPasswordLength) {
-        return res.status(400).json({
-            error: 'Password muy largo',
-            message: 'La contraseña es demasiado larga'
-        });
-    }
-
-    next();
-};
-
-// POST /api/register - Registrar nuevo usuario
-router.post('/register', validateUserData, async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        console.log('🔄 Procesando registro para:', email);
-
-        // Verificar si el usuario ya existe
-        const existingUser = await getQuery('SELECT id FROM users WHERE email = ?', [email]);
-
-        if (existingUser) {
-            console.log('❌ Usuario ya existe:', email);
-            return res.status(409).json({
-                error: 'Usuario ya existe',
-                message: 'Ya existe una cuenta con este email'
-            });
-        }
-
-        // Encriptar password con bcrypt
-        console.log('🔒 Encriptando contraseña con bcrypt...');
-        const saltRounds = securityConfig.bcrypt.saltRounds;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-        console.log('✅ Contraseña encriptada exitosamente');
-
-        // Insertar nuevo usuario con contraseña encriptada
-        const result = await runQuery(
-            'INSERT INTO users (email, password) VALUES (?, ?)',
-            [email, hashedPassword]
-        );
-
-        console.log('✅ Usuario registrado exitosamente:', {
-            email,
-            userId: result.id,
-            passwordHashed: true,
-            saltRounds: saltRounds
-        });
-
-        res.status(201).json({
-            success: true,
-            message: 'Usuario registrado exitosamente',
-            userId: result.id
-        });
-
-    } catch (error) {
-        console.error('❌ Error en registro:', error);
-        res.status(500).json({
-            error: 'Error interno del servidor',
-            message: 'Error al registrar usuario'
-        });
-    }
-});
-
-// POST /api/login - Autenticar usuario
-router.post('/login', validateUserData, async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        console.log('🔐 Procesando login para:', email);
-
-        // Buscar usuario por email
-        const user = await getQuery('SELECT id, email, password FROM users WHERE email = ?', [email]);
-
-        if (!user) {
-            console.log('❌ Usuario no encontrado:', email);
-            return res.status(401).json({
-                error: 'Credenciales inválidas',
-                message: 'Email o contraseña incorrectos'
-            });
-        }
-
-        // Verificar password encriptado con bcrypt
-        console.log('🔍 Verificando contraseña encriptada...');
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-            console.log('❌ Password incorrecto para:', email);
-            return res.status(401).json({
-                error: 'Credenciales inválidas',
-                message: 'Email o contraseña incorrectos'
-            });
-        }
-
-        console.log('✅ Contraseña verificada exitosamente');
-        console.log('✅ Login exitoso para:', email);
-
-        res.json({
-            success: true,
-            message: 'Login exitoso',
-            user: {
-                id: user.id,
-                email: user.email
-            }
-        });
-
-    } catch (error) {
-        console.error('❌ Error en login:', error);
-        res.status(500).json({
-            error: 'Error interno del servidor',
-            message: 'Error al autenticar usuario'
-        });
-    }
-});
-
-module.exports = router;
+export default router;
 ```
 
-### config/security.js
-
+**`backend/src/routes/users.js`**
 ```javascript
-module.exports = {
-    bcrypt: {
-        saltRounds: 12,
-        minPasswordLength: 6,
-        maxPasswordLength: 128
-    },
-    email: {
-        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        maxLength: 254
-    },
-    cors: {
-        origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-        credentials: true
-    }
-};
+import express from 'express';
+import { userController } from '../controllers/userController.js';
+import { authenticateToken } from '../middleware/auth.js';
+
+const router = express.Router();
+
+// GET /api/users/profile
+router.get('/profile', authenticateToken, userController.getProfile);
+
+export default router;
 ```
 
-## 🧪 Tests - Ejemplos de Tests
+---
 
-### auth.test.js (Simplificado)
+## 🧪 Testing - Ejemplos de Implementación
 
+### **1. Test de Endpoint de Autenticación**
+
+**`backend/src/tests/auth.test.js`**
 ```javascript
-const request = require('supertest');
-const TestDatabase = require('./helpers/database');
-const app = require('../server');
+import request from 'supertest';
+import app from '../app.js';
+import { TestDatabase } from './helpers/database.js';
 
 const testDb = new TestDatabase();
 
-const testUser = {
-    email: 'test@example.com',
-    password: 'password123'
-};
+describe('Auth Endpoints', () => {
+  beforeAll(async () => {
+    await testDb.initialize();
+  });
 
-describe('🔐 Endpoints de Autenticación', () => {
-    beforeAll(async () => {
-        await testDb.init();
+  afterEach(async () => {
+    await testDb.cleanup();
+  });
+
+  afterAll(async () => {
+    await testDb.destroy();
+  });
+
+  describe('POST /api/auth/register', () => {
+    it('should register a new user successfully', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User'
+      };
+
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send(userData)
+        .expect(201);
+
+      expect(response.body).toHaveProperty('message', 'Usuario creado exitosamente');
+      expect(response.body).toHaveProperty('userId');
+      expect(typeof response.body.userId).toBe('number');
     });
 
-    afterEach(async () => {
-        await testDb.clean();
+    it('should return error for duplicate email', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User'
+      };
+
+      // Registrar usuario por primera vez
+      await request(app)
+        .post('/api/auth/register')
+        .send(userData)
+        .expect(201);
+
+      // Intentar registrar el mismo email
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send(userData)
+        .expect(409);
+
+      expect(response.body).toHaveProperty('message', 'El usuario ya existe');
     });
 
-    afterAll(async () => {
-        await testDb.destroy();
+    it('should return error for invalid email', async () => {
+      const userData = {
+        email: 'invalid-email',
+        password: 'password123',
+        name: 'Test User'
+      };
+
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send(userData)
+        .expect(400);
+
+      expect(response.body).toHaveProperty('message');
+    });
+  });
+
+  describe('POST /api/auth/login', () => {
+    beforeEach(async () => {
+      // Crear usuario de prueba
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        name: 'Test User'
+      };
+
+      await request(app)
+        .post('/api/auth/register')
+        .send(userData);
     });
 
-    describe('POST /api/register', () => {
-        test('debe registrar un nuevo usuario exitosamente', async () => {
-            const response = await request(app)
-                .post('/api/register')
-                .send(testUser)
-                .expect(201);
+    it('should login successfully with valid credentials', async () => {
+      const loginData = {
+        email: 'test@example.com',
+        password: 'password123'
+      };
 
-            expect(response.body).toMatchObject({
-                success: true,
-                message: 'Usuario registrado exitosamente'
-            });
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send(loginData)
+        .expect(200);
 
-            expect(response.body).toHaveProperty('userId');
-            expect(typeof response.body.userId).toBe('number');
-        });
-
-        test('debe rechazar registro con email inválido', async () => {
-            const response = await request(app)
-                .post('/api/register')
-                .send({
-                    email: 'invalid-email',
-                    password: 'password123'
-                })
-                .expect(400);
-
-            expect(response.body).toMatchObject({
-                error: 'Email inválido',
-                message: 'Ingresa un email válido'
-            });
-        });
+      expect(response.body).toHaveProperty('message', 'Login exitoso');
+      expect(response.body).toHaveProperty('user');
+      expect(response.body).toHaveProperty('token');
+      expect(response.body.user).toHaveProperty('email', 'test@example.com');
     });
 
-    describe('POST /api/login', () => {
-        beforeEach(async () => {
-            await testDb.createTestUser(testUser.email, testUser.password);
-        });
+    it('should return error for invalid password', async () => {
+      const loginData = {
+        email: 'test@example.com',
+        password: 'wrongpassword'
+      };
 
-        test('debe hacer login exitoso con credenciales correctas', async () => {
-            const response = await request(app)
-                .post('/api/login')
-                .send(testUser)
-                .expect(200);
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send(loginData)
+        .expect(401);
 
-            expect(response.body).toMatchObject({
-                success: true,
-                message: 'Login exitoso'
-            });
-
-            expect(response.body).toHaveProperty('user');
-            expect(response.body.user).toMatchObject({
-                id: expect.any(Number),
-                email: testUser.email
-            });
-        });
-
-        test('debe rechazar login con usuario inexistente', async () => {
-            const response = await request(app)
-                .post('/api/login')
-                .send({
-                    email: 'nonexistent@example.com',
-                    password: 'wrongpassword'
-                })
-                .expect(401);
-
-            expect(response.body).toMatchObject({
-                error: 'Credenciales inválidas',
-                message: 'Email o contraseña incorrectos'
-            });
-        });
+      expect(response.body).toHaveProperty('message', 'Credenciales inválidas');
     });
+
+    it('should return error for non-existent user', async () => {
+      const loginData = {
+        email: 'nonexistent@example.com',
+        password: 'password123'
+      };
+
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send(loginData)
+        .expect(401);
+
+      expect(response.body).toHaveProperty('message', 'Credenciales inválidas');
+    });
+  });
 });
 ```
 
-## 🎨 CSS - Ejemplos de Estilos
+### **2. Helper de Base de Datos para Tests**
 
-### Variables CSS Base
+**`backend/src/tests/helpers/database.js`**
+```javascript
+import fs from 'fs';
+import path from 'path';
+import database from '../../config/database.js';
 
-```css
-:root {
-    /* Colores principales */
-    --primary-color: #667eea;
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --secondary-color: #764ba2;
+export class TestDatabase {
+  constructor() {
+    this.dbPath = './test-database.sqlite';
+    this.originalDbPath = process.env.DB_PATH;
+  }
 
-    /* Colores de estado */
-    --success-color: #10b981;
-    --error-color: #e74c3c;
-    --warning-color: #f59e0b;
+  async initialize() {
+    // Configurar base de datos de prueba
+    process.env.DB_PATH = this.dbPath;
 
-    /* Colores de texto */
-    --text-primary: #333;
-    --text-secondary: #666;
-    --text-light: #999;
+    // Conectar a la base de datos de prueba
+    await database.connect();
 
-    /* Colores de fondo */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-error: #fdf2f2;
-    --bg-success: #f0f9ff;
+    // Crear tablas de prueba
+    await this.createTables();
+  }
 
-    /* Espaciado */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 0.75rem;
-    --spacing-lg: 1rem;
-    --spacing-xl: 1.5rem;
-    --spacing-2xl: 2rem;
+  async createTables() {
+    const createUsersTable = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        name TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
 
-    /* Bordes redondeados */
-    --border-radius-sm: 4px;
-    --border-radius-md: 8px;
-    --border-radius-lg: 12px;
+    await database.query(createUsersTable);
+  }
 
-    /* Sombras */
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 4px 12px rgba(102, 126, 234, 0.4);
+  async cleanup() {
+    // Limpiar datos de prueba
+    await database.query('DELETE FROM users');
+  }
 
-    /* Transiciones */
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --transition-slow: 0.5s ease;
+  async destroy() {
+    // Cerrar conexión
+    await database.close();
+
+    // Restaurar configuración original
+    process.env.DB_PATH = this.originalDbPath;
+
+    // Eliminar archivo de base de datos de prueba
+    if (fs.existsSync(this.dbPath)) {
+      fs.unlinkSync(this.dbPath);
+    }
+  }
+
+  async createTestUser(userData = {}) {
+    const defaultUser = {
+      email: 'test@example.com',
+      password: 'hashedpassword',
+      name: 'Test User',
+      ...userData
+    };
+
+    const result = await database.query(
+      'INSERT INTO users (email, password, name) VALUES (?, ?, ?)',
+      [defaultUser.email, defaultUser.password, defaultUser.name]
+    );
+
+    return {
+      id: result.lastID,
+      ...defaultUser
+    };
+  }
+
+  async getUserByEmail(email) {
+    return await database.getQuery(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+  }
 }
 ```
 
-### Estilos de Componentes
+---
 
-```css
-/* Formulario */
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xl);
-}
+## 📚 Documentación - Ejemplos de Implementación
 
-/* Grupo de campos */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-}
+### **1. README Principal**
 
-.form-group label {
-    color: var(--text-primary);
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-sm);
-}
+**`README.md`**
+```markdown
+# Nombre del Proyecto
 
-/* Campos de entrada */
-.form-input {
-    padding: var(--spacing-md);
-    border: 2px solid var(--border-primary);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-base);
-    transition: border-color var(--transition-normal);
-    background: var(--bg-secondary);
-}
+## Descripción
+Breve descripción del proyecto y sus objetivos principales.
 
-.form-input:focus {
-    outline: none;
-    border-color: var(--border-focus);
-    background: var(--bg-primary);
-}
+## Tecnologías
+- **Frontend**: Vue.js 3 + Vite
+- **Backend**: Node.js + Express
+- **Base de Datos**: SQLite (desarrollo) / PostgreSQL (producción)
+- **Testing**: Jest + Supertest
+- **Estilos**: CSS Variables + Modular CSS
 
-.form-input.error {
-    border-color: var(--border-error);
-    background: var(--bg-error);
-}
+## Instalación
 
-/* Botones */
-.btn {
-    border: none;
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-}
+### Prerrequisitos
+- Node.js 18+
+- npm o yarn
 
-.btn-primary {
-    background: var(--primary-gradient);
-    color: var(--bg-primary);
-}
-
-.btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 2px solid var(--border-primary);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    background: var(--bg-secondary);
-    border-color: var(--border-focus);
-    color: var(--primary-color);
-    transform: translateY(-2px);
-}
-```
-
-## 📋 Comandos de Ejemplo
-
-### Desarrollo
-
+### Pasos de Instalación
 ```bash
-# Iniciar frontend
+# Clonar repositorio
+git clone [url-del-repositorio]
+cd [nombre-del-proyecto]
+
+# Instalar dependencias frontend
+cd frontend
+npm install
+
+# Instalar dependencias backend
+cd ../backend
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus configuraciones
+```
+
+## Desarrollo
+
+### Frontend
+```bash
 cd frontend
 npm run dev
+```
+El frontend estará disponible en: http://localhost:3000
 
-# Iniciar backend
+### Backend
+```bash
 cd backend
 npm run dev
+```
+El backend estará disponible en: http://localhost:3001
 
-# Inicializar base de datos
+### Base de Datos
+```bash
 cd backend
 npm run init-db
 ```
 
-### Testing
+## Testing
 
+### Frontend Tests
 ```bash
-# Ejecutar tests
+cd frontend
+npm test
+```
+
+### Backend Tests
+```bash
 cd backend
 npm test
-
-# Tests con cobertura
-npm run test:coverage
-
-# Tests específicos
-npm test -- --testNamePattern="login"
 ```
 
-### Build
-
+### Tests con Coverage
 ```bash
-# Build frontend
-cd frontend
-npm run build
-
-# Iniciar backend en producción
 cd backend
-npm start
+npm run test:coverage
 ```
 
-Estos ejemplos proporcionan una base sólida para implementar la funcionalidad completa del proyecto. Pueden ser adaptados y extendidos según las necesidades específicas.
+## Scripts Disponibles
+
+### Frontend
+- `npm run dev` - Servidor de desarrollo
+- `npm run build` - Build para producción
+- `npm run preview` - Preview del build
+- `npm test` - Ejecutar tests
+
+### Backend
+- `npm run dev` - Servidor de desarrollo con nodemon
+- `npm start` - Servidor de producción
+- `npm test` - Ejecutar tests
+- `npm run test:watch` - Tests en modo watch
+- `npm run test:coverage` - Tests con cobertura
+- `npm run init-db` - Inicializar base de datos
+
+## Estructura del Proyecto
+
+```
+proyecto/
+├── frontend/           # Aplicación Vue.js
+├── backend/            # API Node.js/Express
+├── docs/              # Documentación
+└── README.md          # Este archivo
+```
+
+## API Endpoints
+
+### Autenticación
+- `POST /api/auth/register` - Registrar usuario
+- `POST /api/auth/login` - Iniciar sesión
+
+### Usuarios
+- `GET /api/users/profile` - Obtener perfil (requiere autenticación)
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+
+## Contacto
+
+- Email: tu-email@ejemplo.com
+- Proyecto: [https://github.com/usuario/proyecto](https://github.com/usuario/proyecto)
+```
+
+---
+
+## 🔧 Scripts de Utilidad
+
+### **1. Script de Inicialización de Base de Datos**
+
+**`backend/scripts/init-database.js`**
+```javascript
+import database from '../src/config/database.js';
+
+const createTables = async () => {
+  try {
+    console.log('🔄 Inicializando base de datos...');
+
+    // Conectar a la base de datos
+    await database.connect();
+
+    // Crear tabla de usuarios
+    const createUsersTable = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        name TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    await database.query(createUsersTable);
+    console.log('✅ Tabla users creada');
+
+    // Crear índices
+    const createIndexes = `
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+      CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);
+    `;
+
+    await database.query(createIndexes);
+    console.log('✅ Índices creados');
+
+    console.log('🎉 Base de datos inicializada correctamente');
+
+  } catch (error) {
+    console.error('❌ Error inicializando base de datos:', error);
+    process.exit(1);
+  } finally {
+    await database.close();
+  }
+};
+
+// Ejecutar si es llamado directamente
+if (import.meta.url === `file://${process.argv[1]}`) {
+  createTables();
+}
+
+export default createTables;
+```
+
+### **2. Script de Migración**
+
+**`backend/scripts/migrate.js`**
+```javascript
+import database from '../src/config/database.js';
+
+const migrations = [
+  {
+    version: 1,
+    description: 'Crear tabla de usuarios',
+    up: `
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        name TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `
+  },
+  {
+    version: 2,
+    description: 'Agregar campo updated_at',
+    up: `
+      ALTER TABLE users ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    `
+  }
+];
+
+const createMigrationsTable = async () => {
+  const createTable = `
+    CREATE TABLE IF NOT EXISTS migrations (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      version INTEGER UNIQUE NOT NULL,
+      description TEXT,
+      executed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+
+  await database.query(createTable);
+};
+
+const getExecutedMigrations = async () => {
+  const migrations = await database.allQuery(
+    'SELECT version FROM migrations ORDER BY version'
+  );
+  return migrations.map(m => m.version);
+};
+
+const executeMigration = async (migration) => {
+  console.log(`🔄 Ejecutando migración ${migration.version}: ${migration.description}`);
+
+  await database.query(migration.up);
+
+  await database.query(
+    'INSERT INTO migrations (version, description) VALUES (?, ?)',
+    [migration.version, migration.description]
+  );
+
+  console.log(`✅ Migración ${migration.version} completada`);
+};
+
+const migrate = async () => {
+  try {
+    console.log('🔄 Iniciando migraciones...');
+
+    await database.connect();
+    await createMigrationsTable();
+
+    const executedMigrations = await getExecutedMigrations();
+
+    for (const migration of migrations) {
+      if (!executedMigrations.includes(migration.version)) {
+        await executeMigration(migration);
+      } else {
+        console.log(`⏭️  Migración ${migration.version} ya ejecutada`);
+      }
+    }
+
+    console.log('🎉 Todas las migraciones completadas');
+
+  } catch (error) {
+    console.error('❌ Error en migraciones:', error);
+    process.exit(1);
+  } finally {
+    await database.close();
+  }
+};
+
+// Ejecutar si es llamado directamente
+if (import.meta.url === `file://${process.argv[1]}`) {
+  migrate();
+}
+
+export default migrate;
+```
+
+---
+
+*Estos ejemplos proporcionan una base sólida para implementar la estructura definida en `PROJECT_TEMPLATE.md`. Pueden ser adaptados y extendidos según las necesidades específicas de cada proyecto.*

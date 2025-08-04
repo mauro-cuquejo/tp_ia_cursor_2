@@ -12,7 +12,7 @@
           {{ serverError }}
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.email, 'has-success': !errors.email && formData.email }">
           <label for="email">Email</label>
           <input
             type="email"
@@ -20,14 +20,15 @@
             v-model="formData.email"
             @blur="validateEmail"
             @input="clearEmailError"
-            :class="['form-input', { 'error': errors.email }]"
+            class="form-input"
+            :class="{ 'error': errors.email, 'success': !errors.email && formData.email }"
             placeholder="tu@email.com"
             required
           />
           <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.password, 'has-success': !errors.password && formData.password }">
           <label for="password">Contraseña</label>
           <input
             type="password"
@@ -35,7 +36,8 @@
             v-model="formData.password"
             @blur="validatePassword"
             @input="clearPasswordError"
-            :class="['form-input', { 'error': errors.password }]"
+            class="form-input"
+            :class="{ 'error': errors.password, 'success': !errors.password && formData.password }"
             placeholder="Tu contraseña"
             required
           />
@@ -71,180 +73,95 @@ export default {
         password: ''
       },
       isSubmitting: false,
-      serverError: '', // Para errores del servidor
-      isSuccessMessage: false // Para distinguir entre errores y éxitos
+      serverError: '',
+      isSuccessMessage: false
     }
   },
   methods: {
     validateEmail() {
       const email = this.formData.email.trim()
 
-      if (this.isEmailEmpty(email)) {
-        return this.setEmailError('El email es requerido')
+      if (!email) {
+        this.errors.email = 'El email es requerido'
+        return false
       }
 
-      if (this.isEmailInvalid(email)) {
-        return this.setEmailError('Ingresa un email válido')
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+        this.errors.email = 'Ingresa un email válido'
+        return false
       }
 
-      return this.clearEmailError()
+      this.errors.email = ''
+      return true
     },
 
     validatePassword() {
       const password = this.formData.password.trim()
 
-      if (this.isPasswordEmpty(password)) {
-        return this.setPasswordError('La contraseña es requerida')
+      if (!password) {
+        this.errors.password = 'La contraseña es requerida'
+        return false
       }
 
-      if (this.isPasswordTooShort(password)) {
-        return this.setPasswordError('La contraseña debe tener al menos 6 caracteres')
+      if (password.length < 6) {
+        this.errors.password = 'La contraseña debe tener al menos 6 caracteres'
+        return false
       }
 
-      return this.clearPasswordError()
-    },
-
-    // Helper methods for email validation
-    isEmailEmpty(email) {
-      return !email
-    },
-
-    isEmailInvalid(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return !emailRegex.test(email)
-    },
-
-    setEmailError(message) {
-      this.errors.email = message
-      return false
-    },
-
-    // Helper methods for password validation
-    isPasswordEmpty(password) {
-      return !password
-    },
-
-    isPasswordTooShort(password) {
-      return password.length < 6
-    },
-
-    setPasswordError(message) {
-      this.errors.password = message
-      return false
+      this.errors.password = ''
+      return true
     },
 
     clearEmailError() {
-      this.clearFieldError('email')
-      this.clearServerError()
+      this.errors.email = ''
+      this.serverError = ''
     },
 
     clearPasswordError() {
-      this.clearFieldError('password')
-      this.clearServerError()
-    },
-
-    clearFieldError(fieldName) {
-      if (this.errors[fieldName]) {
-        this.errors[fieldName] = ''
-      }
-    },
-
-    clearServerError() {
+      this.errors.password = ''
       this.serverError = ''
-      this.isSuccessMessage = false
-    },
-
-    validateForm() {
-      const isEmailValid = this.validateEmail()
-      const isPasswordValid = this.validatePassword()
-      return isEmailValid && isPasswordValid
     },
 
     async handleSubmit() {
-      if (!this.validateForm()) {
+      if (!this.validateEmail() || !this.validatePassword()) {
         return
       }
 
-      this.prepareForSubmission()
+      this.isSubmitting = true
+      this.serverError = ''
 
       try {
-        await this.performLoginRequest()
+        console.log('🔄 Enviando datos de login:', { email: this.formData.email, password: '[HIDDEN]' })
+
+        const { response, data } = await apiRequest(API_CONFIG.ENDPOINTS.LOGIN, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: this.formData.email,
+            password: this.formData.password
+          })
+        })
+
+        if (response.ok) {
+          console.log('✅ Login exitoso:', data)
+          this.serverError = `¡Inicio de sesión exitoso! Bienvenido ${data.user.email}`
+          this.isSuccessMessage = true
+          this.formData = { email: '', password: '' }
+        } else {
+          console.error('❌ Error en login:', data)
+          this.serverError = data.message || 'Error al iniciar sesión'
+          this.isSuccessMessage = false
+        }
       } catch (error) {
-        this.handleConnectionError(error)
+        console.error('❌ Error de conexión:', error)
+        this.serverError = 'Error de conexión. Verifica que el servidor esté ejecutándose.'
+        this.isSuccessMessage = false
       } finally {
         this.isSubmitting = false
       }
     },
 
-    prepareForSubmission() {
-      this.clearServerError()
-      this.isSubmitting = true
-    },
-
-    async performLoginRequest() {
-      this.logLoginAttempt()
-
-      const { response, data } = await this.sendLoginRequest()
-
-      if (response.ok) {
-        this.handleSuccessfulLogin(data)
-      } else {
-        this.handleLoginError(data)
-      }
-    },
-
-    logLoginAttempt() {
-      console.log('🔄 Enviando datos de login al backend:', {
-        email: this.formData.email,
-        password: '[HIDDEN]'
-      })
-    },
-
-    async sendLoginRequest() {
-      return await apiRequest(API_CONFIG.ENDPOINTS.LOGIN, {
-        method: 'POST',
-        body: JSON.stringify({
-          email: this.formData.email,
-          password: this.formData.password
-        })
-      })
-    },
-
-    handleSuccessfulLogin(data) {
-      console.log('✅ Login exitoso:', data)
-      this.showSuccessMessage(data.user.email)
-      this.resetForm()
-    },
-
-    handleLoginError(data) {
-      console.error('❌ Error en login:', data)
-      this.showErrorMessage(data.message || 'Error al iniciar sesión')
-    },
-
-    handleConnectionError(error) {
-      console.error('❌ Error de conexión:', error)
-      this.showErrorMessage('Error de conexión. Verifica que el servidor esté ejecutándose.')
-    },
-
-    showSuccessMessage(userEmail) {
-      this.serverError = `¡Inicio de sesión exitoso! Bienvenido ${userEmail}`
-      this.isSuccessMessage = true
-    },
-
-    showErrorMessage(message) {
-      this.serverError = message
-      this.isSuccessMessage = false
-    },
-
-    resetForm() {
-      this.formData = {
-        email: '',
-        password: ''
-      }
-    },
-
     goToRegister() {
-      // Emitir evento para cambiar a la vista de registro
       this.$emit('go-to-register')
     }
   }
@@ -252,5 +169,68 @@ export default {
 </script>
 
 <style scoped>
-/* Los estilos ahora están en archivos CSS separados */
+/* Estilos específicos del componente que complementan los estilos globales */
+.auth-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Animaciones específicas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados de validación específicos */
+.form-group.has-error .form-input {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Mejoras específicas para el formulario de login */
+.form-input:focus {
+  transform: scale(1.02);
+}
+
+.btn-primary:disabled {
+  background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%);
+  cursor: not-allowed;
+}
+
+/* Responsive específico */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+    margin: 10px;
+  }
+
+  .form-header h1 {
+    font-size: 1.5rem;
+  }
+}
 </style>

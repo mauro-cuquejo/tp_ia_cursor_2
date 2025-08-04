@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Botones - Estilos Corregidos</title>
+    <link rel="stylesheet" href="./src/assets/styles/main.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="form-header">
+                <h1>Test de Botones - Corregido</h1>
+                <p>Verificando que los estilos se apliquen correctamente sin solapamiento</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0;">
+                <h3>Botones Base (.btn)</h3>
+                <button class="btn">Botón Base</button>
+                <button class="btn" disabled>Botón Base Deshabilitado</button>
+
+                <h3>Botones Primarios (.btn-primary)</h3>
+                <button class="btn btn-primary">Botón Primario</button>
+                <button class="btn btn-primary" disabled>Botón Primario Deshabilitado</button>
+
+                <h3>Botones Secundarios (.btn-secondary)</h3>
+                <button class="btn btn-secondary">Botón Secundario</button>
+                <button class="btn btn-secondary" disabled>Botón Secundario Deshabilitado</button>
+
+                <h3>Grupo de Botones</h3>
+                <div class="button-group">
+                    <button class="btn btn-primary">Primario</button>
+                    <button class="btn btn-secondary">Secundario</button>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <p>Si puedes ver los botones con estilos correctos, entonces el problema de solapamiento está resuelto.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Agregar algunos logs para verificar que los estilos se están aplicando
+        console.log('Test de botones cargado');
+
+        // Verificar que las clases CSS estén disponibles
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach((btn, index) => {
+            console.log(`Botón ${index + 1}:`, {
+                classes: btn.className,
+                computedStyle: window.getComputedStyle(btn)
+            });
+        });
+    </script>
+</body>
+
+</html>

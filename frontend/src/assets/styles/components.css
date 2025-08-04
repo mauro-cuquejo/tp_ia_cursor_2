@@ -1,21 +1,9 @@
 /* Estilos para componentes de formulario */
 
-/* Header de formulario */
+/* Header de formulario - usando variables CSS */
 .form-header {
-  text-align: center;
-  margin-bottom: var(--spacing-2xl);
-}
-
-.form-header h1 {
-  color: var(--text-primary);
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-sm);
-  font-weight: var(--font-weight-semibold);
-}
-
-.form-header p {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
+  /* Los estilos base están definidos en base.css */
+  /* Aquí solo agregamos estilos específicos adicionales si son necesarios */
 }
 
 /* Formulario */
@@ -30,44 +18,45 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+  position: relative;
 }
 
 .form-group label {
   color: var(--text-primary);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-xs);
 }
 
-/* Campos de entrada */
+/* Campos de entrada - usando variables CSS */
 .form-input {
   padding: var(--spacing-md);
-  border: 2px solid var(--border-primary);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-base);
-  transition: border-color var(--transition-normal);
-  background: var(--bg-secondary);
+  transition: all var(--transition-normal);
+  width: 100%;
+  box-sizing: border-box;
+  /* Los estilos de background, color y border están definidos en base.css */
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--border-focus);
-  background: var(--bg-primary);
-}
-
-.form-input.error {
-  border-color: var(--border-error);
-  background: var(--bg-error);
+  transform: scale(1.02);
 }
 
 .form-input::placeholder {
-  color: var(--text-light);
+  font-style: italic;
 }
 
-/* Mensajes de error */
+/* Mensajes de error de validación */
 .error-message {
-  color: var(--error-color);
   font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  animation: slideIn var(--transition-fast);
+  /* Los estilos de background, color y border están definidos en base.css */
 }
 
 /* Mensajes del servidor */
@@ -79,64 +68,76 @@
   margin-bottom: var(--spacing-lg);
   text-align: center;
   animation: fadeIn var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.server-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
 }
 
 .server-message.error {
   background: var(--bg-error);
   border: 2px solid var(--border-error);
   color: var(--error-color);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1);
 }
 
 .server-message.success {
   background: var(--bg-success);
   border: 2px solid var(--border-success);
   color: var(--success-color);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
 }
 
-/* Botones */
-.btn {
-  border: none;
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: all var(--transition-normal);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
+.server-message.warning {
+  background: var(--bg-warning);
+  border: 2px solid var(--border-warning);
+  color: #92400e;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
 }
 
-.btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
+/* Estados de validación para grupos de formulario */
+.form-group.has-error .form-input {
+  animation: shake 0.5s ease-in-out;
 }
 
-.btn-primary {
-  background: var(--primary-gradient);
-  color: var(--bg-primary);
+.form-group.has-success .form-input {
+  /* Estilos definidos en base.css */
 }
 
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+.form-group.has-warning .form-input {
+  /* Estilos definidos en base.css */
 }
 
-.btn-secondary {
-  background: transparent;
-  color: var(--text-secondary);
-  border: 2px solid var(--border-primary);
+/* Botones - Efectos específicos adicionales */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-slow);
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background: var(--bg-secondary);
-  border-color: var(--border-focus);
-  color: var(--primary-color);
-  transform: translateY(-2px);
+.btn:hover::before {
+  left: 100%;
 }
+
+.btn:disabled::before {
+  display: none;
+}
+
+/* Los estilos base de .btn, .btn-primary y .btn-secondary están definidos en base.css */
 
 /* Grupo de botones */
 .button-group {
@@ -149,27 +150,8 @@
   flex: 1;
 }
 
-/* Footer de formulario */
+/* Footer de formulario - usando variables CSS */
 .form-footer {
-  text-align: center;
-  margin-top: var(--spacing-xl);
-  padding-top: var(--spacing-xl);
-  border-top: 1px solid var(--border-primary);
-}
-
-.form-footer p {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.form-footer a {
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: var(--font-weight-medium);
-  transition: color var(--transition-normal);
-}
-
-.form-footer a:hover {
-  color: var(--secondary-color);
-  text-decoration: underline;
+  /* Los estilos base están definidos en base.css */
+  /* Aquí solo agregamos estilos específicos adicionales si son necesarios */
 }

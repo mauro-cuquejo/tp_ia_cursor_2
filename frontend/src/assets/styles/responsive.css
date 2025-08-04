@@ -105,12 +105,12 @@
     --text-light: #999999;
     --bg-primary: #1a1a1a;
     --bg-secondary: #2d2d2d;
-    --bg-error: #3d1a1a;
-    --bg-success: #1a3d2a;
+    --bg-error: #e74c3c;
+    --bg-success: #67b68a;
     --border-primary: #404040;
     --border-focus: #667eea;
-    --border-error: #e74c3c;
-    --border-success: #10b981;
+    --border-error: #8d2727;
+    --border-success: #15553f;
   }
 }
 

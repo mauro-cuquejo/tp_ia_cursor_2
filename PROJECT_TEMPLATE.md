@@ -1,586 +1,581 @@
-# 🚀 Template de Proyecto Full-Stack: Frontend Vue + Backend Node.js
+# 🏗️ Plantilla de Proyecto - Estructura Base
 
-Este documento proporciona una guía completa para replicar la estructura de un proyecto full-stack con frontend Vue.js y backend Node.js/Express, incluyendo autenticación, tests automatizados y estilos modulares.
+## 📋 Descripción General
 
-## 📋 Índice
+Esta plantilla define la estructura base para crear proyectos web modernos con separación clara entre frontend y backend, siguiendo las mejores prácticas de desarrollo y los lineamientos establecidos.
 
-1. [Estructura del Proyecto](#estructura-del-proyecto)
-2. [Configuración Inicial](#configuración-inicial)
-3. [Frontend (Vue.js)](#frontend-vuejs)
-4. [Backend (Node.js/Express)](#backend-nodejsexpress)
-5. [Base de Datos](#base-de-datos)
-6. [Sistema de Tests](#sistema-de-tests)
-7. [Estilos CSS Modulares](#estilos-css-modulares)
-8. [Integración Frontend-Backend](#integración-frontend-backend)
-9. [Scripts y Comandos](#scripts-y-comandos)
-10. [Deployment](#deployment)
+## 🎯 Arquitectura del Proyecto
+
+### **Estructura de Directorios**
+```
+proyecto/
+├── frontend/           # Aplicación frontend (Vue.js/React)
+├── backend/            # API backend (Node.js/Express)
+├── docs/              # Documentación del proyecto
+├── tests/             # Tests de integración
+├── .gitignore         # Archivos a ignorar por Git
+├── README.md          # Documentación principal
+└── PROJECT_TEMPLATE.md # Esta plantilla
+```
+
+### **Separación de Responsabilidades**
+- **Frontend**: Interfaz de usuario, validaciones del lado del cliente, comunicación con API
+- **Backend**: Lógica de negocio, base de datos, autenticación, validaciones del servidor
+- **Documentación**: Guías, especificaciones, ejemplos de uso
 
 ---
 
-## 🏗️ Estructura del Proyecto
+## 🚀 Configuración Inicial
 
+### **1. Estructura Base**
+```bash
+# Crear estructura de directorios
+mkdir proyecto
+cd proyecto
+mkdir frontend backend docs tests
+
+# Inicializar Git
+git init
 ```
-proyecto-fullstack/
-├── frontend/                    # Aplicación Vue.js
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── assets/
-│   │   │   └── styles/         # CSS modular
-│   │   │       ├── base.css
-│   │   │       ├── components.css
-│   │   │       ├── responsive.css
-│   │   │       ├── main.css
-│   │   │       └── README.md
-│   │   ├── components/         # Componentes Vue
-│   │   │   ├── LoginForm.vue
-│   │   │   └── RegisterForm.vue
-│   │   ├── config/            # Configuración
-│   │   │   └── api.js
-│   │   ├── App.vue
-│   │   └── main.js
-│   ├── package.json
-│   ├── vite.config.js
-│   └── .gitignore
-├── backend/                    # API Node.js/Express
-│   ├── config/
-│   │   └── security.js
-│   ├── routes/
-│   │   └── auth.js
-│   ├── tests/
-│   │   ├── helpers/
-│   │   │   └── database.js
-│   │   ├── auth.test.js
-│   │   ├── setup.js
-│   │   └── README.md
-│   ├── database.js
-│   ├── init-database.js
-│   ├── server.js
-│   ├── package.json
-│   ├── jest.config.js
-│   └── .gitignore
-├── README.md
+
+### **2. Configuración de Git**
+```bash
+# .gitignore principal
+node_modules/
+.env
+.env.local
+.env.production
+*.log
+.DS_Store
+dist/
+build/
+coverage/
+```
+
+### **3. Documentación Base**
+```bash
+# Crear archivos de documentación
+touch README.md
+touch docs/API.md
+touch docs/FRONTEND.md
+touch docs/BACKEND.md
+touch docs/DEPLOYMENT.md
+```
+
+---
+
+## 🎨 Frontend - Estructura Base
+
+### **Tecnologías Recomendadas**
+- **Framework**: Vue.js 3 o React
+- **Build Tool**: Vite o Webpack
+- **Estilos**: CSS Modules, SCSS, o Tailwind CSS
+- **Estado**: Pinia (Vue) o Redux/Zustand (React)
+- **HTTP Client**: Axios o Fetch API
+
+### **Estructura de Directorios**
+```
+frontend/
+├── public/              # Archivos estáticos
+├── src/
+│   ├── assets/          # Recursos (imágenes, estilos)
+│   │   ├── images/
+│   │   └── styles/
+│   │       ├── base.css
+│   │       ├── components.css
+│   │       ├── responsive.css
+│   │       └── main.css
+│   ├── components/      # Componentes reutilizables
+│   ├── views/           # Páginas/Vistas
+│   ├── router/          # Configuración de rutas
+│   ├── stores/          # Estado global
+│   ├── services/        # Servicios API
+│   ├── utils/           # Utilidades
+│   ├── config/          # Configuraciones
+│   ├── App.vue          # Componente raíz
+│   └── main.js          # Punto de entrada
+├── package.json
+├── vite.config.js       # Configuración de Vite
 └── .gitignore
 ```
 
----
-
-## ⚙️ Configuración Inicial
-
-### 1. Crear Estructura de Directorios
-
-```bash
-mkdir proyecto-fullstack
-cd proyecto-fullstack
-mkdir frontend backend
+### **Configuración de Estilos**
+```css
+/* Estructura modular de CSS */
+src/assets/styles/
+├── base.css          # Variables CSS, reset, utilidades
+├── components.css    # Estilos de componentes
+├── responsive.css    # Media queries
+└── main.css         # Importa todos los archivos
 ```
 
-### 2. Inicializar Git
+### **Variables CSS Base**
+```css
+:root {
+  /* Colores principales */
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
-```bash
-git init
-echo "node_modules/" > .gitignore
-echo "*.log" >> .gitignore
-echo "dist/" >> .gitignore
-echo "coverage/" >> .gitignore
-echo "*.sqlite" >> .gitignore
-echo "test-database.sqlite" >> .gitignore
-```
+  /* Colores de estado */
+  --success-color: #10b981;
+  --error-color: #e74c3c;
+  --warning-color: #f59e0b;
 
----
+  /* Espaciado */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
 
-## 🎨 Frontend (Vue.js)
-
-### 1. Inicializar Proyecto Vue
-
-```bash
-cd frontend
-npm create vue@latest . -- --typescript false --router false --pinia false --vitest false --cypress false --eslint false --prettier false
-npm install
-```
-
-### 2. Configurar Vite
-
-**`frontend/vite.config.js`**
-```javascript
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
-export default defineConfig({
-  plugins: [vue()],
-  server: {
-    port: 3000,
-    open: true
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true
-  }
-})
-```
-
-### 3. Configurar HTML Principal
-
-**`frontend/index.html`**
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Aplicación</title>
-    <link rel="stylesheet" href="./src/assets/styles/main.css">
-</head>
-<body>
-    <div id="app"></div>
-    <script type="module" src="./src/main.js"></script>
-</body>
-</html>
-```
-
-### 4. Configurar Entry Point
-
-**`frontend/src/main.js`**
-```javascript
-import { createApp } from 'vue'
-import App from './App.vue'
-
-createApp(App).mount('#app')
-```
-
-### 5. Configurar App Principal
-
-**`frontend/src/App.vue`**
-```vue
-<template>
-  <div class="app">
-    <LoginForm v-if="currentView === 'login'" @go-to-register="currentView = 'register'" />
-    <RegisterForm v-else @go-to-login="currentView = 'login'" />
-  </div>
-</template>
-
-<script>
-import LoginForm from './components/LoginForm.vue'
-import RegisterForm from './components/RegisterForm.vue'
-
-export default {
-  name: 'App',
-  components: {
-    LoginForm,
-    RegisterForm
-  },
-  data() {
-    return {
-      currentView: 'login'
-    }
-  }
+  /* Transiciones */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
 }
-</script>
 ```
 
-### 6. Configurar API Client
-
-**`frontend/src/config/api.js`**
+### **Configuración de API**
 ```javascript
-// Configuración de la API
+// src/config/api.js
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3001',
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
   ENDPOINTS: {
-    REGISTER: '/api/register',
-    LOGIN: '/api/login'
+    // Definir endpoints específicos del proyecto
+  },
+  HEADERS: {
+    'Content-Type': 'application/json'
   }
-}
+};
 
-// Función helper para requests
-export async function apiRequest(endpoint, options = {}) {
-  const url = `${API_CONFIG.BASE_URL}${endpoint}`
-
-  const defaultOptions = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+export const apiRequest = async (endpoint, options = {}) => {
+  const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+  const config = {
+    headers: { ...API_CONFIG.HEADERS, ...options.headers },
     ...options
-  }
+  };
 
   try {
-    const response = await fetch(url, defaultOptions)
-    const data = await response.json()
-
-    return { response, data }
+    const response = await fetch(url, config);
+    const data = await response.json();
+    return { response, data };
   } catch (error) {
-    throw new Error(`Error de red: ${error.message}`)
+    throw new Error(`Error en petición API: ${error.message}`);
   }
-}
-```
-
----
-
-## 🔧 Backend (Node.js/Express)
-
-### 1. Inicializar Proyecto Node.js
-
-```bash
-cd backend
-npm init -y
-```
-
-### 2. Instalar Dependencias
-
-```bash
-npm install express cors body-parser bcryptjs sqlite3
-npm install --save-dev nodemon jest supertest
-```
-
-### 3. Configurar Package.json
-
-**`backend/package.json`**
-```json
-{
-  "name": "backend-api",
-  "version": "1.0.0",
-  "description": "API Backend con Node.js, Express y SQLite",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "init-db": "node init-database.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6"
-  },
-  "devDependencies": {
-    "jest": "^30.0.5",
-    "nodemon": "^3.0.1",
-    "supertest": "^7.1.4"
-  },
-  "keywords": ["nodejs", "express", "sqlite", "api"],
-  "author": "",
-  "license": "MIT"
-}
-```
-
-### 4. Configurar Servidor Principal
-
-**`backend/server.js`**
-```javascript
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const authRoutes = require('./routes/auth');
-
-const app = express();
-const PORT = process.env.PORT || 3001;
-
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Logging middleware
-app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-    next();
-});
-
-// Routes
-app.use('/api', authRoutes);
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        message: 'Servidor funcionando correctamente',
-        timestamp: new Date().toISOString()
-    });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).json({
-        error: 'Error interno del servidor',
-        message: err.message
-    });
-});
-
-// 404 handler
-app.use('*', (req, res) => {
-    res.status(404).json({
-        error: 'Endpoint no encontrado',
-        path: req.originalUrl
-    });
-});
-
-// Solo iniciar el servidor si no estamos en modo test
-if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
-        console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-        console.log(`📊 Health check: http://localhost:${PORT}/health`);
-    });
-}
-
-module.exports = app;
-```
-
----
-
-## 🗄️ Base de Datos
-
-### Estructura de Tablas
-
-```sql
--- Tabla de usuarios
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### Comandos de Base de Datos
-
-```bash
-# Inicializar base de datos
-cd backend
-npm run init-db
-
-# Verificar base de datos
-sqlite3 database.sqlite ".tables"
-sqlite3 database.sqlite "SELECT * FROM users;"
-```
-
----
-
-## 🧪 Sistema de Tests
-
-### 1. Configurar Jest
-
-**`backend/jest.config.js`**
-```javascript
-module.exports = {
-    testEnvironment: 'node',
-    testMatch: [
-        '**/__tests__/**/*.js',
-        '**/?(*.)+(spec|test).js'
-    ],
-    testPathIgnorePatterns: [
-        '/node_modules/',
-        '/coverage/'
-    ],
-    collectCoverageFrom: [
-        'routes/**/*.js',
-        'config/**/*.js',
-        'database.js',
-        '!**/node_modules/**',
-        '!**/coverage/**'
-    ],
-    coverageDirectory: 'coverage',
-    coverageReporters: ['text', 'lcov', 'html'],
-    setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
-    testTimeout: 10000,
-    verbose: true,
-    forceExit: true,
-    clearMocks: true,
-    restoreMocks: true
 };
 ```
 
-### 2. Setup de Tests
+---
 
-**`backend/tests/setup.js`**
+## ⚙️ Backend - Estructura Base
+
+### **Tecnologías Recomendadas**
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Base de Datos**: SQLite (desarrollo), PostgreSQL (producción)
+- **Autenticación**: JWT, bcrypt
+- **Validación**: Joi o express-validator
+- **Testing**: Jest, Supertest
+
+### **Estructura de Directorios**
+```
+backend/
+├── src/
+│   ├── config/          # Configuraciones
+│   │   ├── database.js
+│   │   ├── security.js
+│   │   └── environment.js
+│   ├── routes/          # Rutas de la API
+│   ├── controllers/     # Controladores
+│   ├── models/          # Modelos de datos
+│   ├── middleware/      # Middleware personalizado
+│   ├── services/        # Lógica de negocio
+│   ├── utils/           # Utilidades
+│   ├── tests/           # Tests
+│   │   ├── setup.js
+│   │   ├── helpers/
+│   │   └── *.test.js
+│   └── app.js           # Aplicación Express
+├── database/            # Archivos de base de datos
+├── scripts/             # Scripts de utilidad
+├── package.json
+├── jest.config.js
+└── .gitignore
+```
+
+### **Configuración de Base de Datos**
 ```javascript
-const path = require('path');
+// src/config/database.js
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 
-// Configurar variables de entorno para tests
-process.env.NODE_ENV = 'test';
-process.env.DB_PATH = path.join(__dirname, '../test-database.sqlite');
-process.env.PORT = 3002;
+class Database {
+  constructor() {
+    this.db = null;
+  }
 
-// Configurar logging para tests
-const originalConsoleLog = console.log;
-const originalConsoleError = console.error;
+  async connect() {
+    this.db = await open({
+      filename: process.env.DB_PATH || './database/app.sqlite',
+      driver: sqlite3.Database
+    });
+    return this.db;
+  }
 
-if (process.env.VERBOSE_TESTS !== 'true') {
-    console.log = jest.fn();
-    console.error = jest.fn();
+  async query(sql, params = []) {
+    return await this.db.run(sql, params);
+  }
+
+  async getQuery(sql, params = []) {
+    return await this.db.get(sql, params);
+  }
+
+  async allQuery(sql, params = []) {
+    return await this.db.all(sql, params);
+  }
 }
 
-afterEach(() => {
-    if (process.env.VERBOSE_TESTS !== 'true') {
-        console.log = originalConsoleLog;
-        console.error = originalConsoleError;
+export default new Database();
+```
+
+### **Configuración de Seguridad**
+```javascript
+// src/config/security.js
+export const SECURITY_CONFIG = {
+  bcrypt: {
+    saltRounds: 12
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'your-secret-key',
+    expiresIn: '24h'
+  },
+  validation: {
+    email: {
+      minLength: 3,
+      maxLength: 254
+    },
+    password: {
+      minLength: 6,
+      maxLength: 128
     }
+  },
+  cors: {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true
+  }
+};
+```
+
+### **Estructura de Rutas**
+```javascript
+// src/routes/index.js
+import express from 'express';
+import authRoutes from './auth.js';
+import userRoutes from './users.js';
+
+const router = express.Router();
+
+router.use('/api/auth', authRoutes);
+router.use('/api/users', userRoutes);
+
+// Health check
+router.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-global.testTimeout = 10000;
+export default router;
+```
+
+### **Middleware de Validación**
+```javascript
+// src/middleware/validation.js
+import { SECURITY_CONFIG } from '../config/security.js';
+
+export const validateUserData = (req, res, next) => {
+  const { email, password } = req.body;
+
+  // Validaciones específicas del proyecto
+  if (!email || email.length < SECURITY_CONFIG.validation.email.minLength) {
+    return res.status(400).json({ message: 'Email inválido' });
+  }
+
+  if (!password || password.length < SECURITY_CONFIG.validation.password.minLength) {
+    return res.status(400).json({ message: 'Contraseña inválida' });
+  }
+
+  next();
+};
 ```
 
 ---
 
-## 📜 Scripts y Comandos
+## 🧪 Testing - Estructura Base
 
-### Comandos de Desarrollo
+### **Frontend Testing**
+```javascript
+// Configuración de tests frontend
+// vitest.config.js o jest.config.js
+export default {
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.js']
+  }
+};
+```
 
+### **Backend Testing**
+```javascript
+// backend/jest.config.js
+export default {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.js'],
+  testMatch: ['**/__tests__/**/*.js', '**/?(*.)+(spec|test).js'],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/tests/**',
+    '!src/app.js'
+  ]
+};
+```
+
+### **Helpers de Testing**
+```javascript
+// backend/src/tests/helpers/database.js
+export class TestDatabase {
+  constructor() {
+    this.dbPath = './test-database.sqlite';
+  }
+
+  async initialize() {
+    // Inicializar base de datos de prueba
+  }
+
+  async cleanup() {
+    // Limpiar datos de prueba
+  }
+
+  async destroy() {
+    // Eliminar archivo de base de datos
+  }
+}
+```
+
+---
+
+## 📚 Documentación - Estructura Base
+
+### **README.md Principal**
+```markdown
+# Nombre del Proyecto
+
+## Descripción
+Breve descripción del proyecto y sus objetivos.
+
+## Tecnologías
+- Frontend: [Framework]
+- Backend: [Framework]
+- Base de Datos: [DB]
+
+## Instalación
+```bash
+# Clonar repositorio
+git clone [url]
+
+# Instalar dependencias frontend
+cd frontend && npm install
+
+# Instalar dependencias backend
+cd ../backend && npm install
+```
+
+## Desarrollo
 ```bash
 # Frontend
-cd frontend
-npm run dev          # Servidor de desarrollo
-npm run build        # Build para producción
-npm run preview      # Preview del build
+cd frontend && npm run dev
 
 # Backend
-cd backend
-npm run dev          # Servidor de desarrollo con nodemon
-npm start            # Servidor de producción
-npm run init-db      # Inicializar base de datos
-
-# Tests
-cd backend
-npm test             # Ejecutar tests
-npm run test:watch   # Tests en modo watch
-npm run test:coverage # Tests con cobertura
+cd backend && npm run dev
 ```
 
-### Comandos de Instalación
-
+## Testing
 ```bash
-# Instalar dependencias del frontend
-cd frontend
-npm install
+# Frontend tests
+cd frontend && npm test
 
-# Instalar dependencias del backend
-cd backend
-npm install
-
-# Inicializar base de datos
-cd backend
-npm run init-db
+# Backend tests
+cd backend && npm test
+```
 ```
 
-### Comandos de Testing
+### **Documentación Específica**
+- `docs/API.md` - Documentación de endpoints
+- `docs/FRONTEND.md` - Guía de desarrollo frontend
+- `docs/BACKEND.md` - Guía de desarrollo backend
+- `docs/DEPLOYMENT.md` - Guía de despliegue
 
+---
+
+## 🔧 Scripts de Desarrollo
+
+### **Frontend (package.json)**
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src --ext .vue,.js,.ts",
+    "format": "prettier --write src/"
+  }
+}
+```
+
+### **Backend (package.json)**
+```json
+{
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "init-db": "node scripts/init-database.js",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  }
+}
+```
+
+---
+
+## 🎨 Guías de Estilo
+
+### **CSS Architecture**
+- **Base**: Variables CSS, reset, utilidades
+- **Components**: Estilos de componentes específicos
+- **Responsive**: Media queries y adaptaciones
+- **Main**: Archivo principal que importa todo
+
+### **JavaScript/TypeScript**
+- **ESLint**: Configuración de linting
+- **Prettier**: Formateo de código
+- **Husky**: Git hooks para calidad de código
+
+### **Componentes Frontend**
+- **Props**: Validación de props
+- **Events**: Emisión de eventos
+- **State**: Gestión de estado local
+- **Lifecycle**: Hooks del ciclo de vida
+
+---
+
+## 🚀 Despliegue
+
+### **Variables de Entorno**
 ```bash
-# Ejecutar todos los tests
-cd backend
-npm test
+# Frontend (.env)
+VITE_API_URL=https://api.tudominio.com
 
-# Ejecutar tests específicos
-npm test -- --testNamePattern="login"
+# Backend (.env)
+NODE_ENV=production
+PORT=3001
+DB_PATH=./database/production.sqlite
+JWT_SECRET=tu-secret-super-seguro
+FRONTEND_URL=https://tudominio.com
+```
 
-# Ejecutar tests con logs verbosos
-VERBOSE_TESTS=true npm test
-
-# Ejecutar tests con cobertura
-npm run test:coverage
+### **Docker (Opcional)**
+```dockerfile
+# Dockerfile para backend
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3001
+CMD ["npm", "start"]
 ```
 
 ---
 
 ## 📋 Checklist de Implementación
 
-### ✅ Configuración Inicial
+### **Estructura Base**
 - [ ] Crear estructura de directorios
-- [ ] Inicializar Git
-- [ ] Configurar .gitignore
+- [ ] Configurar Git y .gitignore
+- [ ] Crear documentación base
+- [ ] Configurar scripts de desarrollo
 
-### ✅ Frontend (Vue.js)
-- [ ] Inicializar proyecto Vue
-- [ ] Configurar Vite
-- [ ] Crear estructura de componentes
-- [ ] Implementar estilos CSS modulares
-- [ ] Configurar API client
-- [ ] Implementar formularios de autenticación
+### **Frontend**
+- [ ] Inicializar proyecto (Vue/React)
+- [ ] Configurar build tool (Vite/Webpack)
+- [ ] Establecer estructura de estilos
+- [ ] Configurar routing
+- [ ] Implementar gestión de estado
+- [ ] Configurar comunicación con API
 
-### ✅ Backend (Node.js/Express)
+### **Backend**
 - [ ] Inicializar proyecto Node.js
-- [ ] Instalar dependencias
-- [ ] Configurar servidor Express
-- [ ] Implementar middleware (CORS, body-parser)
-- [ ] Configurar base de datos SQLite
-- [ ] Implementar rutas de autenticación
-- [ ] Configurar validaciones y seguridad
-
-### ✅ Base de Datos
-- [ ] Crear script de inicialización
-- [ ] Definir estructura de tablas
-- [ ] Implementar funciones de base de datos
-- [ ] Configurar para tests
-
-### ✅ Sistema de Tests
-- [ ] Configurar Jest
-- [ ] Crear setup de tests
-- [ ] Implementar helper de base de datos
-- [ ] Escribir tests de endpoints
-- [ ] Configurar cobertura de código
-
-### ✅ Integración
+- [ ] Configurar Express
+- [ ] Establecer conexión a base de datos
+- [ ] Implementar autenticación
+- [ ] Crear middleware de validación
 - [ ] Configurar CORS
-- [ ] Implementar manejo de errores
-- [ ] Configurar variables de entorno
-- [ ] Probar integración completa
+
+### **Testing**
+- [ ] Configurar framework de testing
+- [ ] Crear tests unitarios
+- [ ] Implementar tests de integración
+- [ ] Configurar coverage
+
+### **Documentación**
+- [ ] README principal
+- [ ] Documentación de API
+- [ ] Guías de desarrollo
+- [ ] Guía de despliegue
 
 ---
 
-## 🔧 Personalización
+## 🔄 Mantenimiento
 
-### Cambiar Colores del Tema
+### **Actualizaciones Regulares**
+- Dependencias de desarrollo
+- Dependencias de producción
+- Configuraciones de seguridad
+- Documentación
 
-Editar `frontend/src/assets/styles/base.css`:
-```css
-:root {
-    --primary-color: #tu-color-primario;
-    --secondary-color: #tu-color-secundario;
-    /* ... otros colores */
-}
-```
+### **Monitoreo**
+- Logs de aplicación
+- Métricas de rendimiento
+- Errores y excepciones
+- Uso de recursos
 
-### Agregar Nuevos Endpoints
-
-1. Crear nueva ruta en `backend/routes/`
-2. Agregar middleware de validación
-3. Implementar lógica de negocio
-4. Escribir tests
-5. Documentar en README
-
-### Agregar Nuevos Componentes Vue
-
-1. Crear componente en `frontend/src/components/`
-2. Agregar estilos en `frontend/src/assets/styles/components.css`
-3. Importar en `App.vue` o componente padre
-4. Implementar lógica y validaciones
+### **Backup**
+- Base de datos
+- Configuraciones
+- Archivos de usuario
+- Documentación
 
 ---
 
-## 📚 Recursos Adicionales
+## 📞 Soporte
 
-### Documentación Oficial
-- [Vue.js](https://vuejs.org/guide/)
-- [Express.js](https://expressjs.com/)
-- [SQLite](https://www.sqlite.org/docs.html)
-- [Jest](https://jestjs.io/docs/getting-started)
-- [Vite](https://vitejs.dev/guide/)
+### **Recursos Útiles**
+- Documentación oficial de frameworks
+- Comunidades de desarrolladores
+- Herramientas de debugging
+- Guías de mejores prácticas
 
-### Herramientas Recomendadas
-- **Linting**: ESLint + Prettier
-- **Type Checking**: TypeScript (opcional)
-- **State Management**: Pinia (si es necesario)
-- **Routing**: Vue Router (si es necesario)
-- **Testing**: Vitest (para tests unitarios del frontend)
-
-### Mejores Prácticas
-- **Seguridad**: Validar inputs, usar HTTPS, implementar rate limiting
-- **Performance**: Lazy loading, code splitting, caching
-- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
-- **SEO**: Meta tags, sitemap, structured data
+### **Contacto**
+- Equipo de desarrollo
+- Documentación del proyecto
+- Issues y feature requests
+- Contribuciones
 
 ---
 
-Este template proporciona una base sólida para proyectos full-stack con Vue.js y Node.js. Puede ser adaptado y extendido según las necesidades específicas de cada proyecto.
+*Esta plantilla proporciona una base sólida para desarrollar proyectos web modernos siguiendo las mejores prácticas y lineamientos establecidos.*
