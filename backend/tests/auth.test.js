@@ -57,16 +57,25 @@ describe('🔐 Endpoints de Autenticación', () => {
             });
 
             test('debe encriptar la contraseña correctamente', async () => {
+                const bcrypt = require('bcryptjs');
+
+                // Registrar usuario con email único
+                const uniqueUser = { email: 'encrypt@example.com', password: 'password123' };
+
                 await request(app)
                     .post('/api/register')
-                    .send(testUser)
+                    .send(uniqueUser)
                     .expect(201);
 
                 // Obtener usuario de la base de datos
-                const user = await testDb.getUserByEmail(testUser.email);
+                const user = await testDb.getUserByEmail(uniqueUser.email);
                 expect(user).toBeTruthy();
-                expect(user.password).not.toBe(testUser.password);
+                expect(user.password).not.toBe(uniqueUser.password);
                 expect(user.password).toMatch(/^\$2[aby]\$\d{1,2}\$[./A-Za-z0-9]{53}$/); // Formato bcrypt
+
+                // Verificar que se puede desencriptar correctamente
+                const isValidPassword = await bcrypt.compare(uniqueUser.password, user.password);
+                expect(isValidPassword).toBe(true);
             });
         });
 
@@ -141,6 +150,66 @@ describe('🔐 Endpoints de Autenticación', () => {
                     .send({
                         email: 'test@example.com'
                         // password faltante
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar registro con email vacío', async () => {
+                const response = await request(app)
+                    .post('/api/register')
+                    .send({
+                        email: '',
+                        password: 'password123'
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar registro con password vacío', async () => {
+                const response = await request(app)
+                    .post('/api/register')
+                    .send({
+                        email: 'test@example.com',
+                        password: ''
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar registro con email null', async () => {
+                const response = await request(app)
+                    .post('/api/register')
+                    .send({
+                        email: null,
+                        password: 'password123'
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar registro con password null', async () => {
+                const response = await request(app)
+                    .post('/api/register')
+                    .send({
+                        email: 'test@example.com',
+                        password: null
                     })
                     .expect(400);
 
@@ -303,6 +372,66 @@ describe('🔐 Endpoints de Autenticación', () => {
                     message: 'Email y password son requeridos'
                 });
             });
+
+            test('debe rechazar login con email vacío', async () => {
+                const response = await request(app)
+                    .post('/api/login')
+                    .send({
+                        email: '',
+                        password: 'password123'
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar login con password vacío', async () => {
+                const response = await request(app)
+                    .post('/api/login')
+                    .send({
+                        email: testUser.email,
+                        password: ''
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar login con email null', async () => {
+                const response = await request(app)
+                    .post('/api/login')
+                    .send({
+                        email: null,
+                        password: 'password123'
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
+
+            test('debe rechazar login con password null', async () => {
+                const response = await request(app)
+                    .post('/api/login')
+                    .send({
+                        email: testUser.email,
+                        password: null
+                    })
+                    .expect(400);
+
+                expect(response.body).toMatchObject({
+                    error: 'Datos incompletos',
+                    message: 'Email y password son requeridos'
+                });
+            });
         });
     });
 
@@ -357,6 +486,89 @@ describe('🔐 Endpoints de Autenticación', () => {
                 expect(response.status).toBe(400);
                 expect(response.body.error).toBe('Email inválido');
             }
+        });
+
+        test('debe manejar errores de base de datos en registro', async () => {
+            // Mock para simular error de base de datos
+            const originalGetQuery = require('../database').getQuery;
+            jest.spyOn(require('../database'), 'getQuery').mockRejectedValueOnce(
+                new Error('Error de base de datos simulado')
+            );
+
+            const response = await request(app)
+                .post('/api/register')
+                .send({ email: 'newuser@example.com', password: 'password123' })
+                .expect(500);
+
+            expect(response.body).toMatchObject({
+                error: 'Error interno del servidor',
+                message: 'Error al registrar usuario'
+            });
+
+            jest.restoreAllMocks();
+        });
+
+        test('debe manejar errores de base de datos en login', async () => {
+            // Mock para simular error de base de datos
+            const originalGetQuery = require('../database').getQuery;
+            jest.spyOn(require('../database'), 'getQuery').mockRejectedValueOnce(
+                new Error('Error de base de datos simulado')
+            );
+
+            const response = await request(app)
+                .post('/api/login')
+                .send({ email: 'newuser@example.com', password: 'password123' })
+                .expect(500);
+
+            expect(response.body).toMatchObject({
+                error: 'Error interno del servidor',
+                message: 'Error al autenticar usuario'
+            });
+
+            jest.restoreAllMocks();
+        });
+
+        test('debe manejar errores de bcrypt en registro', async () => {
+            // Mock para simular error de bcrypt
+            const bcrypt = require('bcryptjs');
+            jest.spyOn(bcrypt, 'hash').mockRejectedValueOnce(
+                new Error('Error de bcrypt simulado')
+            );
+
+            const response = await request(app)
+                .post('/api/register')
+                .send(testUser)
+                .expect(500);
+
+            expect(response.body).toMatchObject({
+                error: 'Error interno del servidor',
+                message: 'Error al registrar usuario'
+            });
+
+            jest.restoreAllMocks();
+        });
+
+        test('debe manejar errores de bcrypt en login', async () => {
+            // Crear usuario primero
+            await testDb.createTestUser(testUser.email, testUser.password);
+
+            // Mock para simular error de bcrypt
+            const bcrypt = require('bcryptjs');
+            jest.spyOn(bcrypt, 'compare').mockRejectedValueOnce(
+                new Error('Error de bcrypt simulado')
+            );
+
+            const response = await request(app)
+                .post('/api/login')
+                .send(testUser)
+                .expect(500);
+
+            expect(response.body).toMatchObject({
+                error: 'Error interno del servidor',
+                message: 'Error al autenticar usuario'
+            });
+
+            jest.restoreAllMocks();
         });
     });
 
