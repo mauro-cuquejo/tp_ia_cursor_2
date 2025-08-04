@@ -253,7 +253,7 @@
 ### **Estilos Base**
 ```css
 --btn-secondary-bg: transparent         /* Fondo */
---btn-secondary-text: var(--text-secondary)  /* Color del texto */
+--btn-secondary-text: var(--text-light)  /* Color del texto */
 --btn-secondary-border: 2px solid var(--border-primary)  /* Borde */
 --btn-secondary-shadow: none           /* Sombra */
 ```
@@ -266,9 +266,17 @@
 --btn-secondary-transform-active: translateY(0)    /* Transformación al activar */
 --btn-secondary-opacity-disabled: 0.5  /* Opacidad cuando está deshabilitado */
 --btn-secondary-bg-disabled: transparent  /* Fondo deshabilitado */
---btn-secondary-bg-hover: var(--bg-secondary)  /* Fondo al hover */
+--btn-secondary-bg-hover: #f0f2f5  /* Fondo al hover */
 --btn-secondary-border-hover: var(--border-focus)  /* Borde al hover */
---btn-secondary-text-hover: var(--primary-color)  /* Texto al hover */
+--btn-secondary-text-hover: var(--text-secondary)  /* Texto al hover */
+--btn-secondary-bg-focus: #f0f2f5  /* Fondo al focus */
+--btn-secondary-border-focus: var(--border-focus)  /* Borde al focus */
+--btn-secondary-text-focus: var(--text-secondary)  /* Texto al focus */
+--btn-secondary-shadow-focus: 0 0 0 3px rgba(102, 126, 234, 0.1)  /* Sombra al focus */
+--btn-secondary-bg-active: #f0f2f5  /* Fondo al activar */
+--btn-secondary-border-active: var(--border-focus)  /* Borde al activar */
+--btn-secondary-text-active: var(--text-secondary)  /* Texto al activar */
+--btn-secondary-shadow-active: 0 1px 2px rgba(102, 126, 234, 0.1)  /* Sombra al activar */
 ```
 
 ### **Implementación**
@@ -288,7 +296,18 @@
   box-shadow: var(--btn-secondary-shadow-hover);
 }
 
+.btn-secondary:focus:not(:disabled) {
+  background: var(--btn-secondary-bg-focus);
+  border-color: var(--btn-secondary-border-focus);
+  color: var(--btn-secondary-text-focus);
+  box-shadow: var(--btn-secondary-shadow-focus);
+  outline: none;
+}
+
 .btn-secondary:active:not(:disabled) {
+  background: var(--btn-secondary-bg-active);
+  border-color: var(--btn-secondary-border-active);
+  color: var(--btn-secondary-text-active);
   transform: var(--btn-secondary-transform-active);
   box-shadow: var(--btn-secondary-shadow-active);
 }
@@ -347,8 +366,8 @@
 }
 
 .form-footer p {
-  font-size: var(--form-footer-text-size);
-  font-weight: var(--form-footer-text-weight);
+  color: var(--form-header-text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
 }
 
@@ -461,20 +480,29 @@
 ```
 
 ### **Mensajes del Servidor**
-- **Éxito**: Fondo verde claro, borde verde, texto verde
-- **Error**: Fondo rojo claro, borde rojo, texto rojo
-- **Advertencia**: Fondo amarillo claro, borde amarillo, texto naranja
+- **Éxito**: Fondo verde claro, borde izquierdo verde, texto verde
+- **Error**: Fondo rojo claro, borde izquierdo rojo, texto rojo
+- **Advertencia**: Fondo amarillo claro, borde izquierdo amarillo, texto naranja
 - **Animación**: `fadeIn` para entrada suave
-- **Borde superior**: Línea de color con opacidad 0.3
+- **Borde izquierdo**: 4px sólido con color del tipo de mensaje
+- **Borde superior**: Línea de color con opacidad 0.2
+- **Hover**: Elevación sutil con transform y sombra mejorada
+- **Sombra**: Centrada y equilibrada para todos los tipos
 
 ```css
 .server-message {
-  padding: 12px;
-  border-radius: 8px;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-lg);
   text-align: center;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn var(--transition-normal);
   position: relative;
   overflow: hidden;
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all var(--transition-normal);
 }
 
 .server-message::before {
@@ -483,9 +511,14 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: currentColor;
-  opacity: 0.3;
+  opacity: 0.2;
+}
+
+.server-message:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 ```
 
@@ -521,10 +554,11 @@ Los botones siguen una arquitectura de estilos independiente para evitar solapam
 
 ### **Botón Secundario (.btn-secondary)**
 - **Fondo**: Transparente (`--btn-secondary-bg`)
-- **Color**: Texto secundario (`--btn-secondary-text`)
+- **Color**: Texto claro (`--btn-secondary-text: var(--text-light)`)
 - **Borde**: 2px sólido (`--btn-secondary-border`)
-- **Hover**: Fondo gris claro, borde azul, texto primario
-- **Active**: Retorno a posición normal
+- **Hover**: Fondo gris claro suave (`#f0f2f5`), borde azul, texto gris medio
+- **Focus**: Fondo gris claro suave, borde azul, texto gris medio, sombra azul sutil
+- **Active**: Fondo gris claro suave, borde azul, texto gris medio
 - **Disabled**: Opacidad reducida
 
 ### **Efectos Especiales**
@@ -685,3 +719,7 @@ src/assets/styles/
 9. **Organización Modular**: Estilos base en base.css, estilos específicos en components.css
 10. **Consistencia en Componentes**: Todos los elementos (form-input, form-header, form-footer, btn, btn-primary, btn-secondary) siguen el mismo patrón de variables CSS
 11. **Arquitectura de Botones Independiente**: Resuelto el problema de solapamiento entre clases de botones
+12. **Estilos de Botón Secundario Mejorados**: Colores claros y apropiados en todos los estados (normal, hover, focus, active)
+13. **Mensajes del Servidor Modernizados**: Diseño con borde izquierdo prominente, sombras centradas y efectos hover
+14. **Consistencia en Form-Footer**: Texto del footer usa exactamente los mismos estilos que form-header p
+15. **Sombras Equilibradas**: Todas las sombras están centradas y proporcionan profundidad visual sin desequilibrio

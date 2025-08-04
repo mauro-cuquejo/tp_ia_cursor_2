@@ -61,7 +61,7 @@
 
 /* Mensajes del servidor */
 .server-message {
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -70,6 +70,9 @@
   animation: fadeIn var(--transition-normal);
   position: relative;
   overflow: hidden;
+  border: 2px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all var(--transition-normal);
 }
 
 .server-message::before {
@@ -78,30 +81,34 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: currentColor;
-  opacity: 0.3;
+  height: 2px;
+  opacity: 0.2;
+}
+
+.server-message:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .server-message.error {
-  background: var(--bg-error);
-  border: 2px solid var(--border-error);
-  color: var(--error-color);
-  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1);
+  background: var(--error-message-bg);
+  border-left-color: var(--error-message-border);
+  color: var(--error-message-text);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.12);
 }
 
 .server-message.success {
-  background: var(--bg-success);
-  border: 2px solid var(--border-success);
-  color: var(--success-color);
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+  background: var(--success-message-bg);
+  border-left-color: var(--success-message-border);
+  color: var(--success-message-text);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
 }
 
 .server-message.warning {
-  background: var(--bg-warning);
-  border: 2px solid var(--border-warning);
-  color: #92400e;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+  background: var(--warning-message-bg);
+  border-left-color: var(--warning-message-border);
+  color: var(--warning-message-text);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
 }
 
 /* Estados de validación para grupos de formulario */
