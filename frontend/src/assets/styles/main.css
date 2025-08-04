@@ -1,0 +1,81 @@
+/* Importar todos los archivos de estilos */
+@import './base.css';
+@import './components.css';
+@import './responsive.css';
+
+/* Estilos específicos de la aplicación */
+.app {
+  min-height: 100vh;
+  background: var(--bg-secondary);
+}
+
+/* Estilos específicos para formularios de autenticación */
+.auth-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+}
+
+.auth-card {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-2xl);
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn var(--transition-normal);
+}
+
+/* Estilos específicos para mensajes de estado */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--border-primary);
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para estados de validación */
+.form-group.valid .form-input {
+  border-color: var(--border-success);
+}
+
+.form-group.invalid .form-input {
+  border-color: var(--border-error);
+}
+
+/* Estilos para iconos (si se usan) */
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.icon-sm {
+  width: 0.875em;
+  height: 0.875em;
+}
+
+.icon-lg {
+  width: 1.25em;
+  height: 1.25em;
+}
